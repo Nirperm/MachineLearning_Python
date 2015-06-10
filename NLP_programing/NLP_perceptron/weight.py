@@ -1,13 +1,11 @@
-#!/usr/bin/env python
+class Weight:
 
-class updatePython:
-    
     def __init__(self, weight, phi, y):
         self.weight = weight
-        self.phi = phi
-        self.y = y
+        self.phi = phi  # Φ ファイ
+        self.y = y  # label for weight
 
     def update(self):
-        for name,value in self.phi.iteritems():
+        for name, value in self.phi.items():
             self.weight[name] = float(self.weight[name]) + float(value) * int(self.y)
         return self.weight
