@@ -1,42 +1,36 @@
-#!/usr/bin/env python
+from math import log
 
-import sys
-from math import *
 
-class evaluateModelPython:
-    
-    def __init__(self, fileName, word_probability, lambda_word_map):
-        self.fileName = fileName
-        self.word_probability = word_probability
-        self.total_word_number = 0
-        self.lambda_word_P = lambda_word_map
-        self.lambdaP1 = 0.95
-        self.lambdaP2 = 0.95
-        self.lambdaUnk1 = 1 - self.lambdaP1
-        self.lambdaUnk2 = 1 - self.lambdaP2
-        self.Volume = 1000000
-        self.H = 0
+class EvaluateModel:
+
+    LAMBDA_PARM1 = 0.95
+    LAMBDA_PARM2 = 0.95
+    LAMBDA_UNK1 = 1 - LAMBDA_PARM1
+    LAMBDA_UNK2 = 1 - LAMBDA_PARM2
+    V = 1000000  # Volume
+    H = 0  # Entropy
+
+    def __init__(self, file_name, word_prob, lambda_word_dict):
+        self.file_name = file_name
+        self.word_prob = word_prob
+        self.total_word_size = 0
+        self.lambda_word_param = lambda_word_dict
 
     def evaluate_model(self):
-        word = []
-        f = open(self.fileName, 'r')
-        for line in f:
-            rline = line.replace("\n", "")
-            words = rline.split(" ")
-            words.append("</s>")
-            words.insert(0, "<s>")
-            count = 1
-            while len(words) > count:
-                self.total_word_number = self.total_word_number + 1
-                P1 = 1.0 * self.lambdaUnk1 / self.Volume
-                if self.word_probability.has_key(words[count]):
-                   P1 = P1 + (1 - self.lambda_word_P[words[count - 1]] ) * self.word_probability[words[count]]
-                P2 = P1 * self.lambda_word_P[words[count - 1]] / self.Volume
-                bi_word = words[count - 1] + " " + words[count]
-                if self.word_probability.has_key(words[count]):
-                   P2 = P2 + self.lambda_word_P[words[count - 1]] * self.word_probability[bi_word]
-                self.H = self.H -1 * log(P2,2)
-                count = count + 1
-        f.close()
-        
-
+        with open(self.file_name, encoding='utf-8') as f:
+            for line in f:
+                rline = line.replace('\n', '')
+                split_word = rline.split(' ')
+                split_word.append('</s>')
+                split_word.insert(0, '<s>')
+                count = 1
+                while len(split_word) > count:
+                    self.total_word_size += 1
+                    P1 = 1.0 * self.LAMBDA_UNK1 / self.V
+                    if split_word[count] in self.word_prob:
+                        P2 = P1 * self.lambda_word_param[split_word[count - 1]] / self.V
+                        bi_word = split_word[count - 1] + ' ' + split_word[count]
+                    if split_word[count] in self.word_prob:
+                        P2 = P2 + self.lambda_word_param[split_word[count - 1]] * self.word_prob[bi_word]
+                        self.H = self.H - 1 * log(P2, 2)
+                        count = count + 1
