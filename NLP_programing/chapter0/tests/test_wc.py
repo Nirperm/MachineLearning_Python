@@ -8,7 +8,7 @@ class TestSeaquenceFunction(unittest.TestCase):
         file_name = 'data/KEN_ALL.CSV'
         wc = Reader(file_name)
         wc.read_file()
-        self.assertEqual(len(wc.file_data), 123721)
+        self.assertEqual(len(wc.data_list), 123721)
 
 
 if __name__ == '__main__':
