@@ -18,9 +18,9 @@ class Evaluater:
         with open(self.file_name, 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.replace('\n', '')
-                word_list = line.split(' ')
-                word_list.append('</s>')
-                for word in word_list:
+                split_line = line.split(' ')
+                split_line.append('</s>')
+                for word in split_line:
                     self.total_word_count += 1
                     P = 1.0 * self.LAMBDA_UNK / self.V
                     if word in self.word_prob:

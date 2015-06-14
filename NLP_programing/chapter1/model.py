@@ -7,6 +7,6 @@ class Model:
     def read_model(self):
         with open(self.file_name, 'r', encoding='utf-8') as f:
             for line in f:
-                word = line.split(' ')
-                prob = float(word[1])
-                self.word_dict.update({word[0]: prob})
+                split_line = line.split(' ')
+                prob = float(split_line[1])
+                self.word_dict.update({split_line[0]: prob})
