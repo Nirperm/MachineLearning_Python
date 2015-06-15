@@ -7,8 +7,8 @@ class ModelReader:
     def read_model(self):
         with open(self.file_name, encoding='utf-8') as f:
             for line in f:
-                word_list = line.split(' ')
-                prob = float(word_list[len(word_list) - 1])
-                word_list.pop()
-                word = str(' '.join(word_list))
+                split_line = line.split(' ')
+                prob = float(split_line[len(split_line) - 1])
+                split_line.pop()
+                word = str(' '.join(split_line))
                 self.word_dict.update({word: prob})

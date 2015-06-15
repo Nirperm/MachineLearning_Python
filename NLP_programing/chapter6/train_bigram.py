@@ -37,7 +37,6 @@ class TrainBigram:
 
         # Witten Bell Smoothing
         for k, v in bi_diff_word_dict.items():
-            # split_word = k.split(' ')
             if v in u_count_dict:
                 bi_value = u_count_dict[v]
                 u_count_dict.update({v: bi_value + 1})
@@ -47,7 +46,7 @@ class TrainBigram:
         for k in count_word_dict.keys():
             lambda_w = 1 - (1.0 * u_count_dict[k] / (u_count_dict[k] + count_word_dict[k]))
             self.lambda_word_dict.update({k: lambda_w})
-        #
+
         for ngram, count in self.word_dict.items():
             n_split_word = ngram.split(' ')
             n_split_word.pop()
