@@ -1,0 +1,2 @@
+class TrainTopicModel:
+    pass
