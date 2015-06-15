@@ -4,7 +4,7 @@ class Reader:
         self.file_name = file_name
         self.word_list = []
 
-    def file_Read(self):
+    def read_file(self):
         with open(self.file_name, encoding='utf-8') as f:
             for line in f:
                 line = line.replace('\n', '')
