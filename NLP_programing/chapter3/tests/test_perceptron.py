@@ -9,15 +9,17 @@ from writer import Writer
 
 class TestSeaquenceFunction(unittest.TestCase):
 
-    def test_wc(self):
+    def test_word_count(self):
         file_name = 'data/01-train-input.txt'
         reader = Reader(file_name)
         reader.read_file()
-        unigram = TrainUnigram(reader.word_list, reader.total_word_size)
+        unigram = TrainUnigram(reader.word_list, reader.total_word_count)
         unigram.train()
+
         file_name = 'data/unigram_model'
         writemodel = Writer(file_name, unigram.word_dict)
         writemodel.write_file()
+
         file_name = 'data/03-train-input.txt'
         cfeature = FeatureReader(file_name)
         cfeature.read_feature()
@@ -30,13 +32,6 @@ class TestSeaquenceFunction(unittest.TestCase):
         prediction = OnePrediction('data/03-train.txt', online.weight, online.phi, 'UNI:')
         prediction.predict()
 
-        """
-        model = readModelPython(file_name)
-        model.file_read_model()
-        print({k: v for k,v in unigram.word_map.items()})
-        file_name = '01-test-input.txt'
-        self.assertEqual(join_sort_compare_data, answer)
-        """
 
 if __name__ == "__main__":
     unittest.main()

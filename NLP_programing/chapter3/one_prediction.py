@@ -10,8 +10,8 @@ class OnePrediction:
     def predict(self):
         with open(self.file_name, encoding='utf-8') as f:
             for line in f:
-                rline = line.replace('\n', '')
-                split_word = rline.split(' ')
+                line = line.replace('\n', '')
+                split_word = line.split(' ')
                 score = 0
                 for word in split_word:
                     name = self.flabel + word
