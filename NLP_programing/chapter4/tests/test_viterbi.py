@@ -5,7 +5,7 @@ from backward_viterbi import BackwardViterbi
 
 class TestSeaquenceFunction(unittest.TestCase):
 
-    def test_wc(self):
+    def test_word_count(self):
         modelName = 'data/unigram_model'
         fileName = 'data/04-input.txt'
         fviterbi = ForwardViterbi(modelName, fileName)
