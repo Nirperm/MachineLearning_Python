@@ -20,18 +20,18 @@ class EvaluateModel:
         with open(self.file_name, encoding='utf-8') as f:
             for line in f:
                 line = line.replace('\n', '')
-                word_list = line.split(' ')
-                word_list.append('</s>')
-                word_list.insert(0, '<s>')
+                line_split = line.split(' ')
+                line_split.append('</s>')
+                line_split.insert(0, '<s>')
                 count = 1
-                while len(word_list) > count:
+                while len(line_split) > count:
                     self.total_word_count = self.total_word_count + 1
                     P1 = 1.0 * self.LAMBDA_UNK1 / self.V
-                    if word_list[count] in self.word_prob:
-                        P1 = P1 + (1 - self.lambda_word_p[word_list[count - 1]]) * self.word_prob[word_list[count]]
-                    P2 = P1 * self.lambda_word_p[word_list[count - 1]] / self.V
-                    bi_word = word_list[count - 1] + ' ' + word_list[count]
-                    if word_list[count] in self.word_prob:
-                        P2 = P2 + self.lambda_word_p[word_list[count - 1]] * self.word_prob[bi_word]
+                    if line_split[count] in self.word_prob:
+                        P1 = P1 + (1 - self.lambda_word_p[line_split[count - 1]]) * self.word_prob[line_split[count]]
+                    P2 = P1 * self.lambda_word_p[line_split[count - 1]] / self.V
+                    bi_word = line_split[count - 1] + ' ' + line_split[count]
+                    if line_split[count] in self.word_prob:
+                        P2 = P2 + self.lambda_word_p[line_split[count - 1]] * self.word_prob[bi_word]
                     self.H = self.H - 1 * log(P2, 2)
                     count = count + 1

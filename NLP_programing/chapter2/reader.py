@@ -7,8 +7,8 @@ class Reader:
     def read_file(self):
         with open(self.file_name, encoding='utf-8') as f:
             for line in f:
-                rline = line.replace('\n', '')
-                split_list = rline.split(' ')
-                split_list.append('</s>')
-                split_list.insert(0, '<s>')
-                self.word_list.append(split_list)
+                line = line.replace('\n', '')
+                split_line = line.split(' ')
+                split_line.append('</s>')
+                split_line.insert(0, '<s>')
+                self.word_list.append(split_line)
