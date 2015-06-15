@@ -1,9 +1,9 @@
 class TrainUnigram:
 
-    def __init__(self, word, total_word_size):
+    def __init__(self, word, total_word_count):
         self.word = word
         self.word_dict = {}
-        self.total_word_size = total_word_size
+        self.total_word_count = total_word_count
 
     def train(self):
         for word_line in self.word:
@@ -14,5 +14,5 @@ class TrainUnigram:
                 else:
                     self.word_dict[word_unit] = 1
         for k, v in self.word_dict.items():
-            prob = 1.0 * v / self.total_word_size
+            prob = 1.0 * v / self.total_word_count
             self.word_dict.update({k: prob})
