@@ -23,8 +23,8 @@ with open(input_file, encoding='utf-8') as f:
 col1.close()
 col2.close()
 
-cmd1 = 'curl -O {0}'.format("https://github.com/Nirperm/MachineLearning_Python/tree/master/NLP_100knock/chapter2/data/col1.txt")
-cmd2 = 'curl -O {0}'.format('https://github.com/Nirperm/MachineLearning_Python/tree/master/NLP_100knock/chapter2/data/col2.txt')
+cmd1 = 'curl {0}'.format('https://github.com/Nirperm/MachineLearning_Python/blob/master/NLP_100knock/chapter2/data/col1.txt')
+cmd2 = 'curl {0}'.format('https://github.com/Nirperm/MachineLearning_Python/blob/master/NLP_100knock/chapter2/data/col2.txt')
 
 subprocess.call(cmd1, shell=True)
 subprocess.call(cmd2, shell=True)
