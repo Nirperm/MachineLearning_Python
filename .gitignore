@@ -9,6 +9,9 @@ __pycache__/
 # C extensions
 *.so
 
+# data
+NLP_100knock/chapter2/data/split*
+
 # Distribution / packaging
 .Python
 env/
