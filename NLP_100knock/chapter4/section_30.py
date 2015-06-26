@@ -33,5 +33,6 @@ def make_mecab_data():
         node = node.next
     return mecab_dict_list
 
-result = make_mecab_data()
-print(result)
+if __name__ == '__main__':
+    result = make_mecab_data()
+    print(result)
