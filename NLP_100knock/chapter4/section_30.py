@@ -7,31 +7,29 @@
 """
 
 import copy
-import MeCab
 
 
 def make_mecab_data():
-    tagger = MeCab.Tagger('')
-    tagger.parse('')
 
     mecab_dict_list = []
     d = {}
 
-    f = open('data/neko.txt', 'r')
-    content = f.read()
-    node = tagger.parseToNode(content)
-    f.close()
-
-    while node:
-        ary = node.feature.split(',')
-        d['surface'] = node.surface
-        d['base'] = ary[-3]
-        d['pos'] = ary[0]
-        d['pos1'] = ary[1]
-        mecab_dict = copy.copy(d)
-        mecab_dict_list.append(mecab_dict)
-        node = node.next
-    return mecab_dict_list
+    with open('data/neko.txt.mecab', encoding='utf-8') as f:
+        for line in f:
+            ary = line.replace('\t', ',').replace('\n', '').split(',')
+            if len(ary) is 1:
+                d['surface'] = ary[0]
+                d['base'] = None
+                d['pos'] = None
+                d['pos1'] = None
+            else:
+                d['surface'] = ary[0]
+                d['base'] = ary[-3]
+                d['pos'] = ary[1]
+                d['pos1'] = ary[2]
+            mecab_dict = copy.copy(d)
+            mecab_dict_list.append(mecab_dict)
+        return mecab_dict_list
 
 if __name__ == '__main__':
     result = make_mecab_data()

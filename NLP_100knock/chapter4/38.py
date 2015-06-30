@@ -1,6 +1,8 @@
 """
-37. 頻度上位10語
-出現頻度が高い10語とその出現頻度をグラフ（例えば棒グラフなど）で表示せよ．
+38. ヒストグラム
+単語の出現頻度のヒストグラム
+（横軸に出現頻度，縦軸に出現頻度をとる単語の種類数を棒グラフで表したもの）
+を描け．
 """
 
 import matplotlib
@@ -24,12 +26,13 @@ order_word_count_list = sorted(word_count_dict.items(), key=lambda x: x[1], reve
 word_list = []
 count_list = []
 
-for ele in order_word_count_list[:10]:
+for ele in order_word_count_list:
     word_list.append(ele[0])
     count_list.append(ele[1])
 
 bar_width = 200
 
-plt.bar(count_list, count_list, color='blue', width=bar_width, align='center')
-plt.xticks(count_list, word_list, fontproperties=prop)
-plt.savefig('data/37.png')
+word_size_list = list(range(len(word_list)))
+plt.bar(word_size_list, word_size_list, color='red', width=bar_width, align='center')
+plt.xticks(count_list, count_list, fontproperties=prop)
+plt.savefig('data/38.png')

@@ -1,6 +1,6 @@
 """
-37. 頻度上位10語
-出現頻度が高い10語とその出現頻度をグラフ（例えば棒グラフなど）で表示せよ．
+39. Zipfの法則 (右肩下がりの図)
+単語の出現頻度順位を横軸，その出現頻度を縦軸として，両対数グラフをプロットせよ．
 """
 
 import matplotlib
@@ -30,6 +30,8 @@ for ele in order_word_count_list[:10]:
 
 bar_width = 200
 
+"""
 plt.bar(count_list, count_list, color='blue', width=bar_width, align='center')
 plt.xticks(count_list, word_list, fontproperties=prop)
 plt.savefig('data/37.png')
+"""
