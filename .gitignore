@@ -11,7 +11,7 @@ __pycache__/
 
 # data
 NLP_100knock/chapter2/data/split*
-NLP_100knock/chapter4/data/37.png
+NLP_100knock/chapter4/data/*.png
 
 # Distribution / packaging
 .Python
