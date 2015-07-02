@@ -10,7 +10,7 @@ from section_41 import Chunk
 cabocha_list = Morph.read_cabocha()
 teos_list = Chunk.read_cabocha()
 
-chunk = Chunk(cabocha_list[4], teos_list[0], teos_list[1])
+chunk = Chunk(cabocha_list[0], teos_list[0], teos_list[1])
 
 surface_list = []
 dst_list = []
@@ -19,7 +19,7 @@ for dst in chunk.dst:
     dst_list.append(dst)
 
 for line_list in chunk.morphs:
-    if line_list[1] != '記号':
+    if len(line_list) > 1 and line_list[1] != '記号':
         surface_list.append(line_list[0])
 
 
