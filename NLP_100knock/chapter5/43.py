@@ -11,40 +11,42 @@ from collections import defaultdict
 
 def get_reputation(xml):
     flag = None
-    reputation = defaultdict(str)
+    reputation = defaultdict(list)
 
     for el in xml.findall('.//chunk'):
-        tok = el.find('tok')
-        feature = tok.attrib['feature'].strip().split(',')
-        part = feature[0]
-        typ = feature[1]
-
-        if part == '名詞' and \
-            (typ == '一般' or typ ==' 固有名詞'):
-                reputation['object'] = tok.text
-        if part == '形容詞':
-            reputation['adjective'] = feature[6]
-        link = el.attrib['link']
-        if link == '-1':
-            break
-        while 1:
-            res = get_next_chunk(link, part)
-            if res is None:
-                break
-            part, typ, word, link = res
+        all_tok = el.findall('tok')
+        for tok in all_tok:
+            feature = tok.attrib['feature'].strip().split(',')
+            part = feature[0]
+            typ = feature[1]
 
             if part == '名詞' and \
-                (typ == '一般' or typ == '固有名詞'):
-                reputation['object'] = word
+                (typ == '一般' or typ ==' 固有名詞'):
+                    reputation['object'].append(tok.text)
             if part == '形容詞':
-                reputation['adjective'] = word
-                if reputation['object'] is not None:
-                    flag = 1
+                reputation['adjective'].append(feature[6])
+            link = el.attrib['link']
+            if link == '-1':
+                break
+            while 1:
+                res = get_next_chunk(link, part)
+                if res is None:
                     break
-        if flag == 1:
-            break
+                part, typ, word, link = res
 
-    print(reputation['object'] + '\t' + reputation['adjective'])
+                if part == '名詞' and \
+                    (typ == '一般' or typ == '固有名詞'):
+                    reputation['object'].append(word)
+                if part == '形容詞':
+                    reputation['adjective'].append(word)
+                    if reputation['object'] is not None:
+                        flag = 1
+                        break
+            if flag == 1:
+                break
+
+            print(reputation['object'])
+            print(reputation['adjective'])
 
 
 def get_next_chunk(linkid, ex_part):
