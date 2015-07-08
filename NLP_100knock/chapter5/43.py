@@ -4,72 +4,76 @@
 ただし，句読点などの記号は出力しないようにせよ．
 """
 
-import CaboCha
-import xml.etree.ElementTree as ET
-from collections import defaultdict
+# import CaboCha
+from lxml import etree as ET
+# from collections import defaultdict
+
+
+def reshape(input_file):
+    """ Add root tag due to can not use cabocha xml output without change """
+    f = open('data/neko.xml', 'w')
+    f.write('<root>\n')
+    with open(input_file, encoding='utf-8') as xml:
+        sentenceid = 0
+        for line in xml:
+            if line.find('<sentence>') > -1:
+                f.write('<sentence id="' + str(sentenceid) + '">\n')
+                sentenceid += 1
+            else:
+                if line.find('&') > 0 or line.find('</tok>') == 0:
+                    continue
+                else:
+                    f.write(line)
+    f.write('</root>')
+    f.close()
 
 
 def get_reputation(xml):
-    flag = None
-    reputation = defaultdict(list)
-
-    for el in xml.findall('.//chunk'):
-        all_tok = el.findall('tok')
-        for tok in all_tok:
-            feature = tok.attrib['feature'].strip().split(',')
-            part = feature[0]
-            typ = feature[1]
-
-            if part == '名詞' and \
-                (typ == '一般' or typ ==' 固有名詞'):
-                    reputation['object'].append(tok.text)
-            if part == '形容詞':
-                reputation['adjective'].append(feature[6])
-            link = el.attrib['link']
-            if link == '-1':
-                break
-            while 1:
-                res = get_next_chunk(link, part)
-                if res is None:
+    # reputation = defaultdict(list)
+    for sentence in xml.findall('.//sentence'):
+        sentence_id = sentence.attrib['id']
+        for chunk in sentence:
+            link = chunk.attrib['link']
+            for tok in chunk:
+                feature = tok.attrib['feature'].strip().split(',')
+                part = feature[0]
+                if link == '-1':
                     break
-                part, typ, word, link = res
-
-                if part == '名詞' and \
-                    (typ == '一般' or typ == '固有名詞'):
-                    reputation['object'].append(word)
-                if part == '形容詞':
-                    reputation['adjective'].append(word)
-                    if reputation['object'] is not None:
-                        flag = 1
+                if part == '名詞':
+                    noun_word = tok.text
+                    res = get_next_chunk(sentence_id, link, part)
+                    if res is None:
                         break
-            if flag == 1:
-                break
+                    verb_word = res
+                    print(noun_word + '\t' + verb_word)
 
-            print(reputation['object'])
-            print(reputation['adjective'])
+                    # In case of saving extracted word
+                    """
+                    reputation['object'].append(noun_word)
+                    reputation['verb'].append(verb_word)
+
+    reputation_dict = dict(zip(reputation['object'], reputation['verb']))
+    for key, value in reputation_dict.items():
+        print(key + '\t' + value)
+    """
 
 
-def get_next_chunk(linkid, ex_part):
-    if linkid == '-1':
-        return None
-    this_chunk = xml.find(".//chunk[@id='%s']" % linkid)
-    link = this_chunk.attrib['link']
-
-    tok = this_chunk.find('tok')
-    feature = tok.attrib['feature'].strip().split(',')
-    if ex_part == '名詞':
-        if feature[0] == '名詞':
-            return feature[0], feature[1], tok.text, link
-        elif feature[0] == '動詞' or feature[0] == '形容詞':
-            return feature[0], feature[1], feature[6], link
-    elif ex_part == '動詞':
-        if feature[0] == '名詞':
-            return feature[0], feature[1], tok.text, link
-    elif ex_part == '形容詞':
-        if feature[0] == '名詞':
-            return feature[0], feature[1], tok.text, link
+def get_next_chunk(sentence_id, linkid, ex_part):
+    sentence = xml.find(".//sentence[@id='%s']" % sentence_id)
+    chunk = sentence.find(".//chunk[@id='%s']" % linkid)
+    for tok in chunk:
+        feature = tok.attrib['feature'].strip().split(',')
+        if feature[0] == '動詞':
+            return tok.text
 
 if __name__ == '__main__':
+    # Optimize: more faseter
+    # reshape('data/neko.txt.cabocha.xml') In case of utlizing unchanged form Cabocha XML output
+    xml = ET.parse('data/neko.xml')
+    get_reputation(xml)
+
+    # In case of utlizing of Cabocha
+    """
     c = CaboCha.Parser()
     f = open('data/neko.txt', encoding='utf-8')
     content = f.read()
@@ -78,3 +82,4 @@ if __name__ == '__main__':
     tree = c.parse(content)
     xml = ET.fromstring(tree.toString(CaboCha.FORMAT_XML))
     get_reputation(xml)
+    """
