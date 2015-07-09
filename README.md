@@ -6,7 +6,9 @@
 
 ##  Requirements
 * `pip install -r requirements.txt`
-* Need additional install of MeCab and CaboCha.
+* Need additional install of MeCab and CaboCha, pydot.  
+** pydot 
+`git clone https://github.com/nlhepler/pydot.git & cd pydot & pip install -e `
 
 ## Test
 `python -m unittest tests/test~*.py`
