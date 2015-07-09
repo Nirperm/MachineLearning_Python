@@ -7,9 +7,9 @@
 ##  Requirements
 * `pip install -r requirements.txt`
 * Need additional install of MeCab and CaboCha, pydot.  
-
+* OS package manager install Graphviz
 * pydot 
-`git clone https://github.com/nlhepler/pydot.git & cd pydot & pip install -e `
+`git clone https://github.com/nlhepler/pydot.git & cd pydot & pip install -e .`
 
 ## Test
 `python -m unittest tests/test~*.py`
