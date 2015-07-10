@@ -36,33 +36,36 @@ def get_2word(tree):
             chunk_dic[chunk_id] = token.chunk
             chunk_id += 1
     tuples = []
-    for chunk_id, chunk in chunk_dic.items():
+    for chunk in chunk_dic.values():
         if chunk.link > 0:
             from_surface = get_word(tree, chunk)
             to_chunk = chunk_dic[chunk.link]
             to_surface = get_word(tree, to_chunk)
-            print(from_surface)
-            print(to_surface)
             tuples.append((from_surface, to_surface))
     return tuples
 
 
 if __name__ == '__main__':
-    """
     c = CaboCha.Parser()
-    f = open('data/neko.txt', encoding='utf-8')
-    content = f.read().split('\n')
-    f.close()
-    for e in content:
-        print(e)
-    # tree = c.parse(content)
-    """
-
-    """
     with open('data/neko.txt', encoding='utf-8') as f:
-        for line in f:
+        for i, line in enumerate(f):
             tree = c.parse(line)
             edges = get_2word(tree)
-            graph = pydot.graph_from_edges(edges)
-            graph.write_png('data/neko_cabocha.png', prog='dot')
+            if len(edges) > 0:
+                graph = pydot.graph_from_edges(edges)
+                graph.write_png('data/images/neko_cabocha_{0}.png'.format(i), prog='dot')
+    # This pattern is all edges in one file, but process interrputed
+    # pydot.InvocationException: Program terminated with status: -11. stderr follows: []
+    """
+    f = open('data/neko.txt', encoding='utf-8')
+    content_list = f.read().split('\n')
+    content = ''.join(content_list)
+    f.close()
+
+    tree = c.parse(content)
+    edges = get_2word(tree)
+    if len(edges) > 0:
+        print(edges)
+        graph = pydot.graph_from_edges(edges)
+        graph.write_png('data/neko_cabocha.png', prog='dot')
     """
