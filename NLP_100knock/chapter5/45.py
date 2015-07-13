@@ -37,12 +37,12 @@ def get_reputation(xml):
                 if link == '-1':
                     break
                 if part == '動詞':
-                    noun_word = feature[-3]
+                    verb_word = feature[-3]
                     res = get_next_chunk(sentence_id, link, part)
                     if res is None:
                         break
-                    verb_word = res
-                    reputation[noun_word].append(verb_word)
+                    particle_word = res
+                    reputation[verb_word].append(particle_word)
     for key, value in reputation.items():
         value.sort()
         f.write(key + '\t' + ' '.join(value) + '\n')
