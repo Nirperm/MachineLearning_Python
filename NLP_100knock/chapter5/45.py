@@ -42,12 +42,12 @@ def get_reputation(xml):
                     if res is None:
                         break
                     verb_word = res
-                    #if verb_word not in reputation[noun_word]:
                     reputation[noun_word].append(verb_word)
     for key, value in reputation.items():
         value.sort()
         f.write(key + '\t' + ' '.join(value) + '\n')
     f.close()
+
 
 def get_next_chunk(sentence_id, linkid, ex_part):
     sentence = xml.find(".//sentence[@id='%s']" % sentence_id)
@@ -61,5 +61,5 @@ if __name__ == '__main__':
     # Optimize: more faseter
     xml = ET.parse('data/neko.xml')
     get_reputation(xml)
-    cmd = 'grep -e する -e 見る -e 与える | sort | uniq -c | sort -r'.format('data/45_result.txt')
+    cmd = 'grep -e "^する" -e "^見る" -e "^与える" {0} | sed -e "s/\\s/\\n/g" |uniq -c | sort -r -n -k1'.format('data/45_result.txt')
     subprocess.call(cmd, shell=True)
