@@ -49,9 +49,9 @@ def get_reputation(xml):
     f.close()
 
 
-def get_next_chunk(sentence_id, linkid, ex_part):
+def get_next_chunk(sentence_id, link_id, ex_part):
     sentence = xml.find(".//sentence[@id='%s']" % sentence_id)
-    chunk = sentence.find(".//chunk[@id='%s']" % linkid)
+    chunk = sentence.find(".//chunk[@id='%s']" % link_id)
     for tok in chunk:
         feature = tok.attrib['feature'].strip().split(',')
         if feature[0] == '助詞':
