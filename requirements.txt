@@ -6,6 +6,7 @@ ipython==2.3.1
 lxml==3.4.4
 matplotlib==1.4.2
 # mecab-python==0.996
+nltk==3.0.4
 pep8==1.5.7
 pip==1.5.6
 # pydot (1.0.29)
