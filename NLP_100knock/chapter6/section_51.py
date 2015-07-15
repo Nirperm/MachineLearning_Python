@@ -5,11 +5,10 @@
 """
 
 from section_50 import divide_content
-import re
 
 
-def divide_word(content_list):
-    content = ' '.join(result_list)
+def divide_word(sentence_list):
+    content = ' '.join(sentence_list)
     content_list = content.split(' ')
     word_list = []
     for word in content_list:
@@ -20,12 +19,7 @@ def divide_word(content_list):
 
 
 if __name__ == '__main__':
-    f = open('data/nlp.txt', encoding='utf-8')
-    content = f.read()
-    f.close()
-    content = content.replace('(e.g.', '(e.g,')
-    content_list = re.split(r"(\.|;|:|\?|!)\s", content)
-    result_list = divide_content(content_list)
-    word_list = divide_word(result_list)
+    sentence_list = divide_content()
+    word_list = divide_word(sentence_list)
     for w in word_list:
         print(w)
