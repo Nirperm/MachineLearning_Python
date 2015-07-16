@@ -11,12 +11,9 @@ import redis
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
 pipe = r.pipeline()
 
-
 f = gzip.open('data/artist.json.gz', 'rt')
+pipe.flushall()  # initialization
 for i, line in enumerate(f):
     data = json.loads(line)
-    pipe.set('key:%d' % i, data)
-    # pipe.hmset('key:%d' % i, data)
-    pipe.execute()
-
-print(r.get(1))
+    pipe.hmset(i, data)
+pipe.execute()
