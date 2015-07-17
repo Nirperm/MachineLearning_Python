@@ -1,5 +1,6 @@
 # cabocha-python==0.69
 # certifi==14.05.14
+corenlp-python==3.4.1-1
 flake8==2.2.5
 joe==0.0.5
 ipython==2.3.1
