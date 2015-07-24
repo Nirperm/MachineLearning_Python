@@ -5,15 +5,15 @@
 各単語をステミング処理したものが最低限のベースラインとなるであろう．
 """
 
+import pandas as pd
 import re
-from constant import stopwords
+from constant import STOPWORDS
 from nltk.stem import WordNetLemmatizer
-
 
 def extract_sentence(content_list):
     sentence_list = []
     for word in content_list:
-        if word not in stopwords:
+        if word not in STOPWORDS:
             sentence_list.append(word)
     return sentence_list
 
