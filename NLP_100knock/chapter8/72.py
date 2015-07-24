@@ -5,10 +5,11 @@
 各単語をステミング処理したものが最低限のベースラインとなるであろう．
 """
 
-import pandas as pd
 import re
 from constant import STOPWORDS
 from nltk.stem import WordNetLemmatizer
+
+# TODO: create data index colum neg/pos word
 
 def extract_sentence(content_list):
     sentence_list = []
