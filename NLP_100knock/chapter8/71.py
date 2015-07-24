@@ -7,12 +7,12 @@
 """
 
 
-from constant import STOP_WORD_LIST
+from constant import stopwords
 
 
 def stop_word(word):
 
-    if word in STOP_WORD_LIST:
+    if word in stopwords:
         print('True' + '\t' + word)
     else:
         print('False' + '\t' + word)
