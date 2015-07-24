@@ -6,19 +6,19 @@
 """
 
 import re
-from constant import STOP_WORD_LIST
-from nltk.stem import PorterStemmer, WordNetLemmatizer
+from constant import stopwords
+from nltk.stem import WordNetLemmatizer
 
 
 def extract_sentence(content_list):
     sentence_list = []
     for word in content_list:
-        if word not in STOP_WORD_LIST:
+        if word not in stopwords:
             sentence_list.append(word)
     return sentence_list
 
+
 def stemmer(sentence_list):
-    stemmer = PorterStemmer()
     lemmatiser = WordNetLemmatizer()
 
     for word in sentence_list:
@@ -30,7 +30,6 @@ def stemmer(sentence_list):
         word = re.sub(r"^\d+", '', word)
         if len(word) is not 0:
             print(lemmatiser.lemmatize(word, pos='v'))
-            # print(stemmer.stem(word.strip()))
 
 
 if __name__ == '__main__':
