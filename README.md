@@ -6,10 +6,9 @@
 
 ##  Requirements
 * `pip install -r requirements.txt`
+* OS package manager install Graphviz, Redis, MongoDB
 * Need additional install of MeCab and CaboCha, pydot.  
-* OS package manager install Graphviz, Redis
-* pydot 
-`git clone https://github.com/nlhepler/pydot.git & cd pydot & pip install -e .`
+* pydot is particular kind of install. Run `git clone https://github.com/nlhepler/pydot.git & cd pydot & pip install -e .`
 
 ## Test
 `python -m unittest tests/test~*.py`
