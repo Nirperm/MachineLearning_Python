@@ -7,7 +7,7 @@
 ##  Requirements
 * `pip install -r requirements.txt`
 * OS package manager install Graphviz, Redis, MongoDB
-* Need additional install of MeCab and CaboCha, pydot.  
+* Need additional install of Certifi, MeCab and CaboCha, pydot.  
 * pydot is particular kind of install. Run `git clone https://github.com/nlhepler/pydot.git & cd pydot & pip install -e .`
 
 ## Test
