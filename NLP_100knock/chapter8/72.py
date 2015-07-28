@@ -62,7 +62,7 @@ if __name__ == '__main__':
     stem = stemmer(sentence_list)
     """ 辞書オブジェクトの作成 """
     dictionary = corpora.Dictionary(stem)  # 17330 size
-    print(dictionary)
+    print(dictionary.token2id)
     """ 辞書オブジェクトの語彙の削減 """
     """
     # dictionary.filter_extremes(no_below=100, no_above=0.2)  # 100回以上出現してかつ，出現頻度が2割を超えない単語の辞書 138 size
