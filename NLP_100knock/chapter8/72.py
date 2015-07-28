@@ -34,7 +34,6 @@ def stemmer(sentence_list):
 
 
 class MyCorpus():
-
     def __init__(self, dictionary, sentence_list):
         self.dic = dictionary
         self.sentence = sentence_list
@@ -42,12 +41,6 @@ class MyCorpus():
     def __iter__(self):
         for word in self.sentence:
             yield self.dic.doc2bow(word.split())
-
-"""
-def create_corpus(dictionary, sentence_list):
-    for word in sentence_list:
-        yield dictionary.doc2bow(word.split())
-"""
 
 if __name__ == '__main__':
     with open('data/sentiment.txt', encoding='utf-8') as f:
@@ -67,8 +60,6 @@ if __name__ == '__main__':
     """
     # dictionary.filter_extremes(no_below=100, no_above=0.2)  # 100回以上出現してかつ，出現頻度が2割を超えない単語の辞書 138 size
     corpus = MyCorpus(dictionary, sentence_list)
-    # corpus = create_corpus(dictionary, sentence_list)
-    # corpus = next(iter(corpus))
     lda = models.LdaModel(corpus, num_topics=60, id2word=dictionary)
     print(lda.show_topics(num_topics=5))
     """
