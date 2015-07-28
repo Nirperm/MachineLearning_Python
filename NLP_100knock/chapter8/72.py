@@ -8,7 +8,7 @@
 import re
 from constant import STOPWORDS
 from gensim import corpora
-# from gensim import models
+from gensim import models
 from nltk.stem import WordNetLemmatizer
 
 
@@ -52,14 +52,17 @@ if __name__ == '__main__':
                           .strip().split()
 
     sentence_list = extract_sentence(content_list)
-    stem = stemmer(sentence_list)
+    stems = stemmer(sentence_list)
+
     """ 辞書オブジェクトの作成 """
-    dictionary = corpora.Dictionary(stem)  # 17330 size
-    print(dictionary.token2id)
+    dictionary = corpora.Dictionary(stems)  # 17330 size
+
     """ 辞書オブジェクトの語彙の削減 """
-    """
-    # dictionary.filter_extremes(no_below=100, no_above=0.2)  # 100回以上出現してかつ，出現頻度が2割を超えない単語の辞書 138 size
+    # 100回以上出現してかつ，出現頻度が2割を超えない単語の辞書 138 size
+    dictionary.filter_extremes(no_below=100, no_above=0.2)
+
     corpus = MyCorpus(dictionary, sentence_list)
+    """
     lda = models.LdaModel(corpus, num_topics=60, id2word=dictionary)
-    print(lda.show_topics(num_topics=5))
+    print(lda.show_topics())
     """
