@@ -4,6 +4,7 @@ corenlp-python==3.4.1-1
 flake8==2.2.5
 joe==0.0.5
 ipython==2.3.1
+gensim==0.12.1
 lxml==3.4.4
 matplotlib==1.4.2
 # mecab-python==0.996
