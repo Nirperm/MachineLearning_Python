@@ -5,11 +5,18 @@
 各単語をステミング処理したものが最低限のベースラインとなるであろう．
 """
 
+import numpy as np
 import re
+import gensim
 from constant import STOPWORDS
 from gensim import corpora
-from gensim import models
+# from gensim import models
 from nltk.stem import WordNetLemmatizer
+
+
+def vec2dense(vec, num_terms):
+    ''' Convert from sparse gensim format to dense list of numbers '''
+    return list(gensim.matutils.corpus2dense([vec], num_terms=num_terms).T[0])
 
 
 def extract_sentence(content_list):
@@ -30,7 +37,16 @@ def stemmer(sentence_list):
         word = re.sub(r"^\d+\/\d", '', word)
         word = re.sub(r"^\d+", '', word)
         if len(word) is not 0:
-            yield lemmatiser.lemmatize(word, pos='v').rstrip().split()
+            yield lemmatiser.lemmatize(word, pos='v').strip().split()
+
+
+def extract_feature(dictionary, word_list):
+    feature_list = []
+    for word in word_list:
+        sparse = dictionary.doc2bow(word.split())
+        dense = vec2dense(sparse, num_terms=len(dictionary))
+        feature_list.append(dense)
+    return np.float32(feature_list)
 
 
 class MyCorpus():
@@ -56,13 +72,24 @@ if __name__ == '__main__':
 
     """ 辞書オブジェクトの作成 """
     dictionary = corpora.Dictionary(stems)  # 17330 size
+    # unfiltered = dictionary.token2id.keys()
 
-    """ 辞書オブジェクトの語彙の削減 """
-    # 100回以上出現してかつ，出現頻度が2割を超えない単語の辞書 138 size
-    dictionary.filter_extremes(no_below=100, no_above=0.2)
-
-    corpus = MyCorpus(dictionary, sentence_list)
+    """ 辞書オブジェクトの語彙で低頻度と高頻度のワードは除く """
+    dictionary.filter_extremes(no_below=100, no_above=0.6)
     """
+    filterd = dictionary.token2id.keys()
+    filtered_out = set(unfiltered) - set(filterd)
+    """
+
+    word_list = []
+    for stem_word in stemmer(sentence_list):
+        word_list.append(stem_word[0])
+    features = extract_feature(dictionary, word_list)
+
+    # TODO: need label and gether features(as Collections#named_tuple)
+
+    """
+    corpus = MyCorpus(dictionary, sentence_list)
     lda = models.LdaModel(corpus, num_topics=60, id2word=dictionary)
     print(lda.show_topics())
     """
