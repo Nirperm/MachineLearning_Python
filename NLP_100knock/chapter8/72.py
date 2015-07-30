@@ -14,11 +14,6 @@ if __name__ == '__main__':
     with open('data/sentiment.txt', encoding='utf-8') as f:
         lines = f.readlines()
 
-    """
-    texts = [[word for word in line.split() if word not in STOPWORDS] for line in lines]
-    flatten_texts = [elem for sublist in texts for elem in sublist]
-    """
-
     lemmatiser = WordNetLemmatizer()
     stems = [[lemmatiser.lemmatize(word, pos='v') for word in line.split() if word not in STOPWORDS] for line in lines]  # 10661 size
 
@@ -27,36 +22,20 @@ if __name__ == '__main__':
 
     """ 辞書オブジェクトの作成 """
     dictionary = gensim.corpora.Dictionary(stems)
-    # dictionary.save('/tmp/deerwester.dict')
+    dictionary.save('/tmp/deerwester.dict')
 
     """ 辞書オブジェクトの語彙で低頻度と高頻度のワードは除く """
-    # dictionary.filter_extremes(no_below=3, no_above=0.6)
+    dictionary.filter_extremes(no_below=3, no_above=0.6)
 
     corpus = [dictionary.doc2bow(stem) for stem in stems]
-
-    """
     gensim.corpora.MmCorpus.serialize('/tmp/deerwester.mm', corpus)
     dictionary = gensim.corpora.Dictionary.load('/tmp/deerwester.dict')
     corpus = gensim.corpora.MmCorpus('/tmp/deerwester.mm')
-    """
 
-    """
-    lda = gensim.models.LdaModel(corpus, num_topics=60, id2word=dictionary)
-    print(lda.show_topics(num_topics=5))
-    """
-
-    """
     tfidf = gensim.models.TfidfModel(corpus)
     corpus_tfidf = tfidf[corpus]
     lsi = gensim.models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=2)
-    """
 
-    """
     corpus_lsi = lsi[corpus_tfidf]
-    print(lsi.print_topics(2))
-    """
-
-    """
     for doc in tfidf[corpus]:
         print(doc)
-    """
