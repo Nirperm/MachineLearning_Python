@@ -37,7 +37,7 @@ def load_sentiment():
     numpy_matrix = gensim.matutils.corpus2dense(corpus, num_terms=len(corpus))
 
     Sentiment = namedtuple("Sentiment", "data target")
-    sentiment = Sentiment(numpy_matrix, label_list)
+    sentiment = Sentiment(numpy_matrix, target)
     return sentiment
 
 
