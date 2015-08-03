@@ -16,13 +16,9 @@ with open('data/enwiki-20150112-400-r100-10576.txt') as f:
 
 TRIM_SYMBOL = '. , ! ? ; : ( ) [ ] \' "'
 
-"""
-token_list = []
-for line in lines:
-    words = line.split()
-    for word in words:
-        token_list.append(word.lstrip(TRIM_SYMBOL).rstrip(TRIM_SYMBOL))
-print(token_list)
-"""
-token_list = [[word.lstrip(TRIM_SYMBOL).rstrip(TRIM_SYMBOL) for word in line.split()]for line in lines]
-print(token_list)
+token_list = [[word.lstrip(TRIM_SYMBOL).rstrip(TRIM_SYMBOL) for word in line.split()] for line in lines]
+f2 = open('data/tokenaize-enwiki-20150112-400-r100-10576.txt', 'w')
+for token_lines in token_list:
+    if len(token_lines) is not 0:
+        f2.write(' '.join(token_lines) + '\n')
+f2.close()
