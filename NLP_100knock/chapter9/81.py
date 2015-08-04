@@ -15,7 +15,6 @@
 "Isle of Man"は"Isle_of_Man"になるはずである．
 """
 
-
 import urllib.request as req
 from bs4 import BeautifulSoup
 
@@ -23,12 +22,15 @@ response = req.urlopen('http://www6.kaiho.mlit.go.jp/isewan/image/flags/_flags.h
 body = response.read()
 soup = BeautifulSoup(body)
 
-country_names = []
+COUNTRY_NAMES = []
 for i, tr in enumerate(soup.find_all('tr')):
     if i == 1:
-        country_names.append(tr.findChildren()[4].text)
+        COUNTRY_NAMES.append(tr.findChildren()[4].text)
     else:
-        country_names.append(tr.findChildren()[3].text)
+        COUNTRY_NAMES.append(tr.findChildren()[3].text)
 
-while '略号' in country_names:
-    country_names.remove('略号')
+while '略号' in COUNTRY_NAMES:
+    COUNTRY_NAMES.remove('略号')
+
+with open('data/tokenaize-enwiki-20150112-400-r100-10576.txt') as f:
+    lines = f.readlines()
