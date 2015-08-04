@@ -26,11 +26,10 @@ COUNTRY_NAMES = []
 for i, tr in enumerate(soup.find_all('tr')):
     if i == 1:
         COUNTRY_NAMES.append(tr.findChildren()[4].text)
+    elif tr.findChildren()[3].text == '略号':
+        pass
     else:
         COUNTRY_NAMES.append(tr.findChildren()[3].text)
-
-while '略号' in COUNTRY_NAMES:
-    COUNTRY_NAMES.remove('略号')
 
 with open('data/tokenaize-enwiki-20150112-400-r100-10576.txt') as f:
     lines = f.readlines()
