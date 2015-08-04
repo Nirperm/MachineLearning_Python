@@ -13,6 +13,7 @@ __pycache__/
 NLP_100knock/chapter2/data/split*
 NLP_100knock/chapter4/data/*.png
 NLP_100knock/chapter9/data/enwiki-20150112-400-r10*.txt
+NLP_100knock/chapter9/data/tokenaize-enwiki-20150112-400-r10*.txt
 
 # Distribution / packaging
 .Python
