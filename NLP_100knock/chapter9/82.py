@@ -10,19 +10,19 @@
 import random
 
 
-def back_and_forth_ngram(texts, n):
-    if len(texts) >= n:
-        for i in range(len(texts) - n + 1):
-            yield ' '.join(texts[:i + n]).replace(' ', '\t') + ' '.join(texts[-(i + n):]).replace(' ', '\t')
-
-
-if __name__ == '__main__':
+def back_and_forth_ngram():
+    results = []
     with open('data/81_result.txt', encoding='utf-8') as f:
         lines = f.readlines()
 
-    results = []
     for line in lines:
         n = random.randint(2, 6)
-        for e in back_and_forth_ngram(line.split(), n):
-            results.append(e)
-    print(results)
+        texts = line.split()
+        if len(texts) >= n:
+            for i in range(len(texts) - n + 1):
+                results.append(' '.join(texts[:i + n]).replace(' ', '\t') + ' '.join(texts[-(i + n):]).replace(' ', '\t'))
+    return results
+
+if __name__ == '__main__':
+    for e in back_and_forth_ngram():
+        print(e)
