@@ -20,9 +20,9 @@
 
 
 import os
+import re
 import urllib.request as req
 from bs4 import BeautifulSoup
-# from collections import namedtuple
 
 
 def get_countries():
@@ -57,72 +57,22 @@ def make_trans_dict(country_names):
 
 def read_coupus():
     with open('data/tokenaize-enwiki-20150112-400-r100-10576.txt') as f:
-        lines = f.read()
-        # lines = f.readlines()
-    return lines
-
-"""
-def separete_space_word(country_names):
-    Space_Words = namedtuple('Space_Words', ['uni', 'bi', 'tri', 'quadr', 'quinqu'])
-
-    uni_space_words = []
-    bi_space_words = []
-    tri_space_words = []
-    quadr_space_words = []
-    quinqu_space_words = []
-
-    for country in country_names:
-        n = 0
-        for char in country:
-            if char in ' ':
-                n += 1
-        if n == 1:
-            uni_space_words.append(country.strip())
-        elif n == 2:
-            bi_space_words.append(country.strip())
-        elif n == 3:
-            tri_space_words.append(country.strip())
-        elif n == 4:
-            quadr_space_words.append(country.strip())
-        elif n == 5:
-            quinqu_space_words.append(country.strip())
-
-    space_words = Space_Words(uni_space_words,
-                              bi_space_words,
-                              tri_space_words,
-                              quadr_space_words,
-                              quinqu_space_words)
-    return space_words
-"""
+        texts = f.read()
+    return texts
 
 
-def ngram(content, n):
-    # results = []
-    if len(content) >= n:
-        for i in range(len(content) - n + 1):
-            # results.append(content[i: i + n])
-            yield content[i: i + n]
-    # return results
+def multi_replace(text, dic):
+    r = re.compile('|'.join(dic))
 
+    def dedictkey(text):
+        for key in dic.keys():
+            if re.search(key, text):
+                return key
 
-def bigram(line, n=2):
-    return ngram(line, n)
+    def one_xlat(match):
+        return dic[dedictkey(match.group(0))]
 
-
-def trigram(n=3):
-    pass
-
-
-def quadrgram(n=4):
-    pass
-
-
-def quingram(n=5):
-    pass
-
-
-def sexgram(n=6):
-    pass
+    return r.sub(one_xlat, text)
 
 
 if __name__ == '__main__':
@@ -134,18 +84,7 @@ if __name__ == '__main__':
         country_names = [country.strip() for country in country_names]
 
     trans_dict = make_trans_dict(country_names)
-    lines = read_coupus()
-    for key in trans_dict:
-        print(lines.replace(key, trans_dict[key]))
-    # space_words = separete_space_word(country_names)
-    """
-    lines = read_coupus()
-    for line in lines:
-        for result_list in bigram(line.split()):
-            print(result_list)
-
-    trigram()
-    quadrgram()
-    quingram()
-    sexgram()
-    """
+    texts = read_coupus()
+    result = multi_replace(texts, trans_dict)
+    with open('data/81_result.txt', 'w') as f2:
+        f2.write(result)
