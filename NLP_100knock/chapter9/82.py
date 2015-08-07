@@ -11,18 +11,17 @@ import random
 
 
 def back_and_forth_ngram():
-    results = []
     with open('data/81_result.txt', encoding='utf-8') as f:
-        lines = f.readlines()
+        texts = f.read()
 
-    for line in lines:
-        n = random.randint(2, 6)
-        texts = line.split()
-        if len(texts) >= n:
-            for i in range(len(texts) - n + 1):
-                results.append(' '.join(texts[:i + n]).replace(' ', '\t') + ' '.join(texts[-(i + n):]).replace(' ', '\t'))
-    return results
-
+    texts = [word.split() for word in texts]
+    for word in texts:
+        n = random.randint(1, 5)
+        # print( set(texts[:texts.index(word) + n]) -  set(texts[text.index(word) + n:]) )
+    """
+    for i in range(len(token)):
+        n = random.randint(1, 5)
+        print(token[i: n])
+    """
 if __name__ == '__main__':
-    for e in back_and_forth_ngram():
-        print(e)
+    back_and_forth_ngram()
