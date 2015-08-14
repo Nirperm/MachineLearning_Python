@@ -10,7 +10,7 @@ import gensim
 
 
 def vectolize():
-    with open('data/81_result.txt', encoding='utf') as f:
+    with open('../9/data/81_result.txt', encoding='utf') as f:
         lines = f.readlines()
 
     words = [[word for word in line.split()] for line in lines]
