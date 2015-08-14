@@ -24,14 +24,14 @@ def load_sentiment():
 
     dictionary = gensim.corpora.Dictionary(stems)
 
-    dictionary.save('/tmp/deerwester.dict')
+    dictionary.save('/tmp/section72.dict')
 
     """ 辞書オブジェクトの語彙で低頻度と高頻度のワードは除く """
     dictionary.filter_extremes(no_below=3, no_above=0.6)
 
     corpus = [dictionary.doc2bow(stem) for stem in stems]
 
-    gensim.corpora.MmCorpus.serialize('/tmp/deerwester.mm', corpus)
+    gensim.corpora.MmCorpus.serialize('/tmp/section72.mm', corpus)
 
     # tfidf = gensim.models.TfidfModel(corpus) FIXME: is this necessary?
     numpy_matrix = gensim.matutils.corpus2dense(corpus, num_terms=len(corpus))
