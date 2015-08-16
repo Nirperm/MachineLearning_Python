@@ -10,7 +10,7 @@ import gensim
 
 
 def vectolize():
-    with open('../9/data/81_result.txt', encoding='utf') as f:
+    with open('../chapter9/data/81_result.txt', encoding='utf') as f:
         lines = f.readlines()
 
     words = [[word for word in line.split()] for line in lines]
@@ -22,7 +22,7 @@ def vectolize():
 
     corpus = [dictionary.doc2bow(word) for word in words]
 
-    gensim.corpora.MmCorpus.serialize('/tmp/section72.mm', corpus)
+    gensim.corpora.MmCorpus.serialize('/tmp/section90.mm', corpus)
 
     numpy_matrix = gensim.matutils.corpus2dense(corpus, num_terms=len(corpus))
     print(numpy_matrix)
