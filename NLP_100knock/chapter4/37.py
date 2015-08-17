@@ -5,7 +5,6 @@
 
 import matplotlib
 matplotlib.use('Agg')
-
 import platform
 import matplotlib.pyplot as plt
 from section_30 import make_mecab_data

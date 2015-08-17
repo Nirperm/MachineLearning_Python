@@ -5,11 +5,15 @@
 
 import matplotlib
 matplotlib.use('Agg')
-
+import platform
 import matplotlib.pyplot as plt
 from section_30 import make_mecab_data
 
-prop = matplotlib.font_manager.FontProperties(fname="/usr/share/fonts/truetype/fonts-japanese-gothic.ttf")
+""" for Mac """
+if platform.system() == 'Darwin':
+    font_prop = matplotlib.font_manager.FontProperties(fname='/Library/Fonts/Osak.ttf')
+else:
+    font_prop = matplotlib.font_manager.FontProperties(fname="/usr/share/fonts/truetype/fonts-japanese-gothic.ttf")
 
 mecab_dict_list = make_mecab_data()
 word_count_dict = {}
@@ -32,6 +36,6 @@ bar_width = 200
 
 """
 plt.bar(count_list, count_list, color='blue', width=bar_width, align='center')
-plt.xticks(count_list, word_list, fontproperties=prop)
+plt.xticks(count_list, word_list, fontproperties=font_prop)
 plt.savefig('data/37.png')
 """
