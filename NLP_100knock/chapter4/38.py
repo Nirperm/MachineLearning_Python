@@ -13,7 +13,7 @@ from section_30 import make_mecab_data
 
 """ for Mac """
 if platform.system() == 'Darwin':
-    font_prop = matplotlib.font_manager.FontProperties(fname='/Library/Fonts/Osak.ttf')
+    font_prop = matplotlib.font_manager.FontProperties(fname='/Library/Fonts/Osaka.ttf')
 else:
     font_prop = matplotlib.font_manager.FontProperties(fname="/usr/share/fonts/truetype/fonts-japanese-gothic.ttf")
 
