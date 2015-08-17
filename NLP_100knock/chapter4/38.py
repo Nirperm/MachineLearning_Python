@@ -11,7 +11,7 @@ import platform
 import matplotlib.pyplot as plt
 from section_30 import make_mecab_data
 
-# for Mac
+""" for Mac """
 if platform.system() == 'Darwin':
     font_prop = matplotlib.font_manager.FontProperties(fname='/Library/Fonts/Osak.ttf')
 else:
