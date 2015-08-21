@@ -1,5 +1,5 @@
 """
-38. ヒストグラム
+38.ヒストグラム
 単語の出現頻度のヒストグラム
 （横軸に出現頻度，縦軸に出現頻度をとる単語の種類数を棒グラフで表したもの）
 を描け．
@@ -7,36 +7,45 @@
 
 import matplotlib
 matplotlib.use('Agg')
-import platform
+import math
 import matplotlib.pyplot as plt
+import numpy as np
 from section_30 import make_mecab_data
+from section_37 import count_word
 
-""" for Mac """
-if platform.system() == 'Darwin':
-    font_prop = matplotlib.font_manager.FontProperties(fname='/Library/Fonts/Osaka.ttf')
-else:
-    font_prop = matplotlib.font_manager.FontProperties(fname="/usr/share/fonts/truetype/fonts-japanese-gothic.ttf")
 
-mecab_dict_list = make_mecab_data()
-word_count_dict = {}
+def main(word_count_dict):
+    word_list = []
+    count_list = []
 
-for i, mecab_dict in enumerate(mecab_dict_list):
-    if mecab_dict['surface'] not in word_count_dict:
-        word_count_dict[mecab_dict['surface']] = 0
-    word_count_dict[mecab_dict['surface']] += 1
+    for key, value in word_count_dict.items():
+        word_list.append(key)
+        count_list.append(value)
 
-order_word_count_list = sorted(word_count_dict.items(), key=lambda x: x[1], reverse=True)
+    duplicated_list = list(set(x for l in word_list for x in l))
 
-word_list = []
-count_list = []
+    r = np.array(count_list)
+    # fixed number of bins
+    bins = np.linspace(math.ceil(min(r)),
+                       math.floor(max(r)),
+                       20)
+    plt.xlim([min(r)-5, max(r)+5])
 
-for ele in order_word_count_list:
-    word_list.append(ele[0])
-    count_list.append(ele[1])
+    bar_width = 200
+    plt.xlabel('frequency')
+    plt.ylabel('category size')
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.hist(r, bins=bins, range=(0, len(count_list)), normed=False, facecolor='b', alpha=0.8, width=bar_width)
+    ax.set_xlim(0, len(count_list))
+    ax.set_ylim(0, len(duplicated_list))
+    ax.set_title('Histogram', size=16)
+    ax.set_xlabel('Frequency', size=14)
+    ax.set_ylabel('The number of type', size=14)
+    plt.savefig('data/38.png')
 
-bar_width = 200
 
-word_size_list = list(range(len(word_list)))
-plt.bar(word_size_list, word_size_list, color='red', width=bar_width, align='center')
-plt.xticks(count_list, count_list, fontproperties=font_prop)
-plt.savefig('data/38.png')
+if __name__ == '__main__':
+    mecab_dict_list = make_mecab_data()
+    word_count_dict = count_word(mecab_dict_list)
+    main(word_count_dict)
