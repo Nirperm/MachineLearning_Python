@@ -32,8 +32,6 @@ def main(word_count_dict):
     plt.xlim([min(r)-5, max(r)+5])
 
     bar_width = 200
-    plt.xlabel('frequency')
-    plt.ylabel('category size')
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.hist(r, bins=bins, range=(0, len(count_list)), normed=False, facecolor='b', alpha=0.8, width=bar_width)

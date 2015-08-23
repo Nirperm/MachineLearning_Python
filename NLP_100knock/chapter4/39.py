@@ -2,40 +2,43 @@
 39. Zipfの法則 (右肩下がりの図)
 単語の出現頻度順位を横軸，その出現頻度を縦軸として，両対数グラフをプロットせよ．
 """
+# refer http://naga0001.at.webry.info/201412/article_1.html
+# http://soy-curd.hatenablog.com/entry/2015/07/25/151521
 
 import matplotlib
 matplotlib.use('Agg')
 import platform
+import numpy as np
 import matplotlib.pyplot as plt
 from section_30 import make_mecab_data
+from section_37 import count_word
 
-""" for Mac """
-if platform.system() == 'Darwin':
-    font_prop = matplotlib.font_manager.FontProperties(fname='/Library/Fonts/Osaka.ttf')
-else:
-    font_prop = matplotlib.font_manager.FontProperties(fname="/usr/share/fonts/truetype/fonts-japanese-gothic.ttf")
 
-mecab_dict_list = make_mecab_data()
-word_count_dict = {}
+def main(word_count_dict):
+    word_list = []
+    count_list = []
 
-for i, mecab_dict in enumerate(mecab_dict_list):
-    if mecab_dict['surface'] not in word_count_dict:
-        word_count_dict[mecab_dict['surface']] = 0
-    word_count_dict[mecab_dict['surface']] += 1
+    for key, value in word_count_dict.items():
+        word_list.append(key)
+        count_list.append(value)
 
-order_word_count_list = sorted(word_count_dict.items(), key=lambda x: x[1], reverse=True)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.set_xlim(0, len(word_list))
+    ax.set_ylim(0, len(count_list))
+    ax.set_title('Zipf', size=16)
+    ax.set_xlabel('Log(rank)', size=14)
+    ax.set_ylabel('Frequency', size=14)
 
-word_list = []
-count_list = []
+    x = np.array(count_list)
+    y = np.sin(2*np.pi*x)
+    x[np.isnan(x)] = np.nanmean(x)
+    y[np.isnan(y)] = np.nanmean(y)
+    plt.loglog(x, y)
+    plt.savefig('data/39.png')
 
-for ele in order_word_count_list[:10]:
-    word_list.append(ele[0])
-    count_list.append(ele[1])
 
-bar_width = 200
-
-"""
-plt.bar(count_list, count_list, color='blue', width=bar_width, align='center')
-plt.xticks(count_list, word_list, fontproperties=font_prop)
-plt.savefig('data/37.png')
-"""
+if __name__ == '__main__':
+    mecab_dict_list = make_mecab_data()
+    word_count_dict = count_word(mecab_dict_list)
+    main(word_count_dict)
