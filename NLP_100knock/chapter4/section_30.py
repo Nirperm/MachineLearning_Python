@@ -49,7 +49,6 @@ def texts2dic(txt_list):
 
 if __name__ == '__main__':
     txt = load_txt('./data/neko.txt')
-
     morph = analyze(txt)
     morph_dics = dictnize(morph)
     for x in morph_dics:
