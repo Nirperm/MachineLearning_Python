@@ -22,15 +22,16 @@ def analyze(txt):
     return tree.toString(CaboCha.FORMAT_LATTICE)
 
 
-def spearate_element(tree):
+def spearate_element(result):
     cabocha_list = []
+
     surface_list = []
     base_list = []
     pos_list = []
     pos1_list = []
     morph_list = []
 
-    for line in tree.split('\n'):
+    for line in result.split('\n'):
         ary = line.replace('\t', ',').split(',')
         morph_list.append(ary)
         cabocha_list.append(morph_list)
@@ -53,11 +54,11 @@ def spearate_element(tree):
 class Morph:
 
     def __init__(self, morphs, surface, base, pos, pos1):
+        self.morphs = morphs
         self.surface = surface
         self.base = base
         self.pos = pos
         self.pos1 = pos1
-        self.morphs = morphs
 
 
 if __name__ == '__main__':

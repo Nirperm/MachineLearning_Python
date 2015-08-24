@@ -10,8 +10,28 @@
 第5章の残りの問題では，ここで作ったプログラムを活用せよ．
 """
 
+from section_40 import load_txt
+from section_40 import analyze
+from section_40 import spearate_element
 
-from section_40 import Morph
+
+def read_cabocha(result):
+    dst_list = []
+    srcs_list = []
+    teos_list = []
+
+    for line in result.split('\n'):
+        ary = line.replace('\t', ',').split(',')
+        if len(ary) is 1:
+            teos_ary = ''.join(ary).split(' ')
+            if len(teos_ary) > 1:
+                dst_list.append(teos_ary[1])
+                srcs_list.append(teos_ary[2])
+
+                teos_list.append(dst_list)
+                teos_list.append(srcs_list)
+
+    return teos_list
 
 
 class Chunk:
@@ -21,27 +41,12 @@ class Chunk:
         self.dst = dst
         self.srcs = srcs
 
-    def read_cabocha():
-        dst_list = []
-        srcs_list = []
-        teos_list = []
-
-        with open('data/neko.txt.cabocha', encoding='utf-8') as f:
-            for line in f:
-                ary = line.replace('\t', ',').split(',')
-                if len(ary) is 1:
-                    teos_ary = ''.join(ary).split(' ')
-                    if len(teos_ary) > 1:
-                        dst_list.append(teos_ary[1])
-                        srcs_list.append(teos_ary[2])
-
-                        teos_list.append(dst_list)
-                        teos_list.append(srcs_list)
-
-        return teos_list
 
 if __name__ == '__main__':
-    teos_list = Chunk.read_cabocha()
-    cabocha_list = Morph.read_cabocha()
+    txt = load_txt('./data/neko.txt')
+    result = analyze(txt)
+    cabocha_list = spearate_element(result)
+
+    teos_list = read_cabocha(result)
     chunk = Chunk(cabocha_list[0], teos_list[0], teos_list[1])
-    print(' '.join(chunk.morphs[70]) + chunk.dst[70])
+    print(chunk.morphs[8], chunk.dst[8])
