@@ -31,22 +31,22 @@ def make_hist(sorted_tf):
 
 def plot_hist(tf_histgram):
     frequency_list = []
-    count_list = []
+    category_list = []
 
     for key, value in tf_histgram.items():
-        frequency_list.append(key)
-        count_list.append(value)
+        category_list.append(key)
+        frequency_list.append(value)
 
-    r = np.array(count_list)
-    # r = np.array(frequency_list)
+    data = np.array([category_list, frequency_list]).T
 
     # fixed number of bins
-    bins = np.linspace(math.ceil(min(r)),
-                       math.floor(max(r)),
+    """
+    bins = np.linspace(math.ceil(min(data)),
+                       math.floor(max(data)),
                        20)
-    plt.xlim([min(r) - 5, max(r) + 5])
-
-    plt.hist(r, bins=bins, normed=False, facecolor='b', alpha=0.8)
+    plt.xlim([min(data) - 5, max(data) + 5])
+    """
+    plt.hist(data, bins=50, normed=False, facecolor='b', alpha=0.8)
     plt.title('Histogram', size=16)
     plt.xlabel('Frequency', size=14)
     plt.ylabel('The number of type', size=14)
