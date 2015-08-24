@@ -3,14 +3,22 @@
 サ変接続の名詞をすべて抽出せよ．
 """
 
+from section_30 import load_txt
+from section_30 import analyze
+from section_30 import dictnize
 
-from section_30 import make_mecab_data
+
+def extract_sahen(morph_dics):
+    """ サ変接続を抽出する """
+    ns = filter(lambda x: x['pos'] == '名詞', morph_dics)
+    ns_pos1 = filter(lambda x: 'pos1' in x, ns)
+    return filter(lambda x: x['pos1'] == 'サ変接続', ns_pos1)
 
 
-mecab_dict_list = make_mecab_data()
-conjugational_plagal_verb_list = []
-for mecab_dict in mecab_dict_list:
-    if mecab_dict['pos1'] == 'サ変接続':
-        conjugational_plagal_verb_list.append(mecab_dict['base'])
-
-print(list(set(conjugational_plagal_verb_list)))
+if __name__ == '__main__':
+    txt = load_txt('./data/neko.txt')
+    morph = analyze(txt)
+    dictnize(morph)
+    sahens = extract_sahen(dictnize(morph))
+    for x in sahens:
+        print(x)

@@ -1,34 +1,36 @@
 """
 35. 名詞の連接
 名詞の連接（連続して出現する名詞）を最長一致で抽出せよ．
-
 """
 
+from section_30 import load_txt
+from section_30 import analyze
+from section_30 import dictnize
 
-from section_30 import make_mecab_data
-import re
 
-# 最大、9-ngram
-non_list = []
-mecab_dict_list = make_mecab_data()
+def extract_noun_seqs(morph_dics):
+    """ 連続している名詞を抽出する """
 
-for i, mecab_dict in enumerate(mecab_dict_list):
-    try:
-        # TODO 連続していない名詞もとれている
-        if mecab_dict['pos'] == '名詞' and mecab_dict_list[i]['pos'] == '名詞':
-            non_list.append(mecab_dict['surface'])
+    dics = list(morph_dics)
+
+    seqs = []
+    seq = []
+    for i in range(len(dics)):
+        if dics[i]['pos'] == '名詞':
+            seq.append(dics[i]['surface'])
         else:
-            non_list.append('@')
+            if seq:
+                seqs.append(seq)
 
-    except IndexError:
-        pass
+            seq = []
 
-str_non = '@'.join(non_list)
-result = re.sub(r'@{2,}', ',', str_non)
-replace_list = result.replace('@', '').split(',')
-non_juncture_list = []
-for word in replace_list:
-    if len(word) >= 2:
-        non_juncture_list.append(word)
+    words = filter(lambda x: len(x) > 1, seqs)
+    return map(lambda x: ''.join(x), words)
 
-print(non_juncture_list)
+
+if __name__ == '__main__':
+    txt = load_txt('./data/neko.txt')
+    morph = analyze(txt)
+    n_seq = extract_noun_seqs(dictnize(morph))
+    for x in n_seq:
+        print(x)

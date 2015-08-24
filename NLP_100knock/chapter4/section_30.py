@@ -6,31 +6,51 @@
 第4章の残りの問題では，ここで作ったプログラムを活用せよ．
 """
 
-import copy
+import MeCab
 
 
-def make_mecab_data():
+def load_txt(filepath):
+    """ テキスト読込を行う """
 
-    mecab_dict_list = []
-    d = {}
+    with open(filepath, 'r') as f:
+        txt = f.read()
+    return txt
 
-    with open('data/neko.txt.mecab', encoding='utf-8') as f:
-        for line in f:
-            ary = line.replace('\t', ',').replace('\n', '').split(',')
-            if len(ary) is 1:
-                d['surface'] = ary[0]
-                d['base'] = None
-                d['pos'] = None
-                d['pos1'] = None
-            else:
-                d['surface'] = ary[0]
-                d['base'] = ary[-3]
-                d['pos'] = ary[1]
-                d['pos1'] = ary[2]
-            mecab_dict = copy.copy(d)
-            mecab_dict_list.append(mecab_dict)
-        return mecab_dict_list
+
+def analyze(txt):
+    """ 形態素解析を行う """
+    mt = MeCab.Tagger('-Ochasen')
+    return mt.parse(txt)
+
+
+def dictnize(txt):
+    """ chasen形式の文字列を辞書に変換する """
+
+    buf = txt.split("\n")
+    dics = filter(lambda x: x, map(lambda x: texts2dic(x.split()), buf))
+    return dics
+
+
+def texts2dic(txt_list):
+    if len(txt_list) < 4:
+        return None
+
+    morph_dic = {}
+    morph_dic['surface'] = txt_list[0]
+    morph_dic['pronunce'] = txt_list[1]
+
+    morph_dic['base'] = txt_list[2]
+    poses = txt_list[3].split("-")
+    morph_dic['pos'] = poses[0]
+    if len(poses) > 1:
+        morph_dic['pos1'] = poses[1]
+    return morph_dic
+
 
 if __name__ == '__main__':
-    result = make_mecab_data()
-    print(result)
+    txt = load_txt('./data/neko.txt')
+
+    morph = analyze(txt)
+    morph_dics = dictnize(morph)
+    for x in morph_dics:
+        print(x)

@@ -3,13 +3,21 @@
 動詞の原形をすべて抽出せよ．
 """
 
-from section_30 import make_mecab_data
+from section_30 import load_txt
+from section_30 import analyze
+from section_30 import dictnize
+from section_31 import extract_verb
 
 
-mecab_dict_list = make_mecab_data()
-original_verb_list = []
-for mecab_dict in mecab_dict_list:
-    if mecab_dict['pos'] == '動詞':
-        original_verb_list.append(mecab_dict['base'])
+def extract_base(verb):
+    """ 原型を抽出する """
+    return map(lambda x: x['base'], verb)
 
-print(list(set(original_verb_list)))
+
+if __name__ == '__main__':
+    txt = load_txt('./data/neko.txt')
+    morph = analyze(txt)
+    verb = extract_verb(dictnize(morph))
+    vbases = extract_base(verb)
+    for x in vbases:
+        print(x)
