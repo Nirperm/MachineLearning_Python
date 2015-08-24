@@ -7,7 +7,6 @@
 
 import matplotlib
 matplotlib.use('Agg')
-import math
 import matplotlib.pyplot as plt
 import numpy as np
 from section_30 import load_txt
@@ -16,7 +15,7 @@ from section_30 import dictnize
 from section_36 import calc_tf
 
 
-def make_hist(sorted_tf):
+def count_word(sorted_tf):
     """ ヒストグラム作成に必要な値を計算する """
 
     tf_histgram = {}
@@ -39,13 +38,6 @@ def plot_hist(tf_histgram):
 
     data = np.array([category_list, frequency_list]).T
 
-    # fixed number of bins
-    """
-    bins = np.linspace(math.ceil(min(data)),
-                       math.floor(max(data)),
-                       20)
-    plt.xlim([min(data) - 5, max(data) + 5])
-    """
     plt.hist(data, bins=50, normed=False, facecolor='b', alpha=0.8)
     plt.title('Histogram', size=16)
     plt.xlabel('Frequency', size=14)
@@ -58,5 +50,5 @@ if __name__ == '__main__':
     morph = analyze(txt)
     tf = calc_tf(dictnize(morph))
     sorted_tf = sorted(tf.items(), key=lambda x: x[1], reverse=True)
-    tf_histgram = make_hist(sorted_tf)
+    tf_histgram = count_word(sorted_tf)
     plot_hist(tf_histgram)

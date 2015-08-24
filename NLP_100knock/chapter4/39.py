@@ -3,42 +3,54 @@
 単語の出現頻度順位を横軸，その出現頻度を縦軸として，両対数グラフをプロットせよ．
 """
 # refer http://naga0001.at.webry.info/201412/article_1.html
-# http://soy-curd.hatenablog.com/entry/2015/07/25/151521
 
 import matplotlib
 matplotlib.use('Agg')
-import platform
 import numpy as np
 import matplotlib.pyplot as plt
-from section_30 import make_mecab_data
-from section_37 import count_word
+from section_30 import load_txt
+from section_30 import analyze
+from section_30 import dictnize
+from section_36 import calc_tf
+from section_38 import count_word
 
 
-def main(word_count_dict):
-    word_list = []
-    count_list = []
+def zipf(tf_histgram):
+    frequency_list = []
+    category_list = []
+    zipf_list = []
+    for key, value in tf_histgram.items():
+        category_list.append(key)
+        frequency_list.append(value)
+        zipf_list.append(key * value)
 
-    for key, value in word_count_dict.items():
-        word_list.append(key)
-        count_list.append(value)
+    x = np.array(zipf_list)
+    y = np.log(x)
 
+    plt.title('Zipf', size=16)
+    plt.xlabel('Log(rank)', size=14)
+    plt.ylabel('Frequency', size=14)
+
+    plt.plot(x, y)
+    plt.savefig('data/39.png')
+    """
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.set_xlim(0, len(word_list))
     ax.set_ylim(0, len(count_list))
-    ax.set_title('Zipf', size=16)
-    ax.set_xlabel('Log(rank)', size=14)
-    ax.set_ylabel('Frequency', size=14)
 
     x = np.array(count_list)
-    y = np.sin(2*np.pi*x)
+    y = np.sin(2 * np.pi * x)
     x[np.isnan(x)] = np.nanmean(x)
     y[np.isnan(y)] = np.nanmean(y)
     plt.loglog(x, y)
     plt.savefig('data/39.png')
-
+    """
 
 if __name__ == '__main__':
-    mecab_dict_list = make_mecab_data()
-    word_count_dict = count_word(mecab_dict_list)
-    main(word_count_dict)
+    txt = load_txt('./data/neko.txt')
+    morph = analyze(txt)
+    tf = calc_tf(dictnize(morph))
+    sorted_tf = sorted(tf.items(), key=lambda x: x[1], reverse=True)
+    tf_histgram = count_word(sorted_tf)
+    zipf(tf_histgram)
