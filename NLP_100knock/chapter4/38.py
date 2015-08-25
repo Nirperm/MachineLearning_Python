@@ -28,20 +28,20 @@ def count_word(sorted_tf):
     return tf_histgram
 
 
-def plot_hist(tf_histgram):
-    frequency_list = []
-    category_list = []
+def plot_hist(tf_dict):
+    category_list = np.array([key for key in tf_dict.keys()])
+    frequency_list = np.array([value for value in tf_dict.values()])
+    # data = np.array([category_list, frequency_list]).T
 
-    for key, value in tf_histgram.items():
-        category_list.append(key)
-        frequency_list.append(value)
-
-    data = np.array([category_list, frequency_list]).T
-
-    plt.hist(data, bins=50, normed=False, facecolor='b', alpha=0.8)
     plt.title('Histogram', size=16)
     plt.xlabel('Frequency', size=14)
     plt.ylabel('The number of type', size=14)
+
+    # plt.hist(data, bins=50, normed=False, facecolor='b', alpha=0.8)
+    plt.bar(frequency_list, category_list)
+    plt.xlim([0, max(frequency_list)])
+    plt.ylim([0, max(category_list)])
+
     plt.savefig('data/38.png')
 
 
@@ -50,5 +50,7 @@ if __name__ == '__main__':
     morph = analyze(txt)
     tf = calc_tf(dictnize(morph))
     sorted_tf = sorted(tf.items(), key=lambda x: x[1], reverse=True)
-    tf_histgram = count_word(sorted_tf)
-    plot_hist(tf_histgram)
+    category_tf = {}
+    for i, ele in enumerate(sorted_tf):
+        category_tf[i + 1] = ele[1]
+    plot_hist(category_tf)
