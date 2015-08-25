@@ -1,8 +1,10 @@
 """
 39. Zipfの法則 (右肩下がりの図)
 単語の出現頻度順位を横軸，その出現頻度を縦軸として，両対数グラフをプロットせよ．
-"""
+(ジップの法則とは、出現頻度がk番目に大きい要素が全体に占める割合が1/kに比例するという経験則)
+
 # refer http://naga0001.at.webry.info/201412/article_1.html
+"""
 
 import matplotlib
 matplotlib.use('Agg')
@@ -12,45 +14,28 @@ from section_30 import load_txt
 from section_30 import analyze
 from section_30 import dictnize
 from section_36 import calc_tf
-from section_38 import count_word
 
 
-def zipf(tf_histgram):
-    frequency_list = []
-    category_list = []
-    zipf_list = []
-    for key, value in tf_histgram.items():
-        category_list.append(key)
-        frequency_list.append(value)
-        zipf_list.append(key * value)
-
-    x = np.array(zipf_list)
-    y = np.log(x)
-
+def zipf(tf_dict):
+    x = np.array([key for key in tf_dict.keys()])
+    y = np.array([value for value in tf_dict.values()])
     plt.title('Zipf', size=16)
-    plt.xlabel('Log(rank)', size=14)
+    plt.xlabel('Log(Rank)', size=14)
     plt.ylabel('Frequency', size=14)
 
-    plt.plot(x, y)
-    plt.savefig('data/39.png')
-    """
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.set_xlim(0, len(word_list))
-    ax.set_ylim(0, len(count_list))
-
-    x = np.array(count_list)
-    y = np.sin(2 * np.pi * x)
-    x[np.isnan(x)] = np.nanmean(x)
-    y[np.isnan(y)] = np.nanmean(y)
     plt.loglog(x, y)
+    plt.xlim([0, max(x)])
+    plt.ylim([0, max(y)])
+
     plt.savefig('data/39.png')
-    """
 
 if __name__ == '__main__':
     txt = load_txt('./data/neko.txt')
     morph = analyze(txt)
     tf = calc_tf(dictnize(morph))
     sorted_tf = sorted(tf.items(), key=lambda x: x[1], reverse=True)
-    tf_histgram = count_word(sorted_tf)
-    zipf(tf_histgram)
+
+    rank_tf = {}
+    for i, ele in enumerate(sorted_tf):
+        rank_tf[i + 1] = ele[1]
+    zipf(rank_tf)
