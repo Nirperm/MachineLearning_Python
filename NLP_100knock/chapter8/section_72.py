@@ -19,6 +19,10 @@ def load_sentiment():
 def stem(lines):
     lemmatiser = WordNetLemmatizer()
     stems = [[lemmatiser.lemmatize(word, pos='v') for word in line.split() if word not in STOPWORDS] for line in lines]  # 10661 size
+    return stems
+
+
+def create_feture(stems, lines):
     target_labels = [1 if line[:2] == '+1' else 0 for line in lines]
     Sentiment = namedtuple("Sentiment", ["data", "target"])
     feature = Sentiment(stems, target_labels)
@@ -27,5 +31,6 @@ def stem(lines):
 
 if __name__ == '__main__':
     lines = load_sentiment()
-    feature = stem(lines)
+    stems = stem(lines)
+    feature = create_feture(stems, lines)
     print(feature.data, feature.target)
