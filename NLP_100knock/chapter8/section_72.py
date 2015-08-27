@@ -10,7 +10,7 @@ from constant import STOPWORDS
 from nltk.stem import WordNetLemmatizer
 
 
-def load_sentiment():
+def load_txt():
     with open('data/sentiment.txt', encoding='utf-8') as f:
         lines = f.readlines()
     return lines
@@ -22,7 +22,7 @@ def stem(lines):
     return stems
 
 
-def create_feture(stems, lines):
+def create_feature(lines, stems):
     target_labels = [1 if line[:2] == '+1' else 0 for line in lines]
     Sentiment = namedtuple("Sentiment", ["data", "target"])
     feature = Sentiment(stems, target_labels)
@@ -30,7 +30,7 @@ def create_feture(stems, lines):
 
 
 if __name__ == '__main__':
-    lines = load_sentiment()
+    lines = load_txt()
     stems = stem(lines)
-    feature = create_feture(stems, lines)
+    feature = create_feature(lines, stems)
     print(feature.data, feature.target)
