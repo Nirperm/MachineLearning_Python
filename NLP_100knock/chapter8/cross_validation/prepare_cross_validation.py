@@ -1,4 +1,9 @@
-# refer to http://yut.hatenablog.com/entry/20120829/1346197290
+"""
+refer to
+http://yut.hatenablog.com/entry/20120829/1346197290
+http://hy-adversaria.blogspot.jp/2011/04/pythonlibsvm.html
+"""
+
 import subprocess
 
 cmd1 = 'perl -MList::Util=shuffle -e "print shuffle(<>)" < ../data/75.scale | split -l 3500'
