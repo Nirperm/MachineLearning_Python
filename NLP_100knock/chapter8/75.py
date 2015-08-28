@@ -6,6 +6,7 @@
 
 import gensim
 import os
+import subprocess
 from section_72 import load_txt
 from section_72 import stem
 from section_72 import create_feature
@@ -49,4 +50,7 @@ if __name__ == '__main__':
     if '75.scale' not in os.listdir('./data/'):
         create_scale(corpus, feature)
 
-    # TODO: use libsvm? & check feature of high and low weight
+    cmd1 = 'svm-train -t 0 -h 1 data/75.scale ; mv 75.scale.model data/'
+    subprocess.call(cmd1,  shell=True)
+    cmd2 = 'svm-predict data/75.scale data/75.scale.model data/sentiment.txt > data/accuracy.txt'
+    subprocess.call(cmd2,  shell=True)
