@@ -46,7 +46,7 @@ if __name__ == '__main__':
     dictionary = gensim.corpora.Dictionary.load('/tmp/chapter8.dict')
     corpus = gensim.corpora.MmCorpus('/tmp/chapter8.mm')
 
-    if '75.scale.model' not in os.listdir('./data/'):
+    if '75.scale' not in os.listdir('./data/'):
         create_scale(corpus, feature)
 
     # TODO: use libsvm? & check feature of high and low weight
