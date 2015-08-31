@@ -6,6 +6,7 @@
 
 import gensim
 import os
+import re
 import subprocess
 from section_72 import load_txt
 from section_72 import stem
@@ -51,8 +52,40 @@ if __name__ == '__main__':
         create_scale(corpus, feature)
 
     # 素性数が多い場合、線形カーネル(ただの内積): K(u,v) = uTvを使うと上手くいきやすいので -t 0を使う
-    cmd1 = 'svm-train -t 0 -h 1 data/75.scale ; mv 75.scale.model data/'
-    subprocess.call(cmd1,  shell=True)
+    if '75.scale.model' not in os.listdir('./data'):
+        cmd1 = 'svm-train -t 0 -h 0 data/75.scale ; mv 75.scale.model data/'
+        subprocess.call(cmd1, shell=True)
 
-    cmd2 = 'svm-predict data/75.scale data/75.scale.model data/accuracy.txt > data/accuracy.txt'
-    subprocess.call(cmd2,  shell=True)
+        cmd2 = 'svm-predict data/75.scale data/75.scale.model data/accuracy.txt > data/accuracy.txt'
+        subprocess.call(cmd2, shell=True)
+
+    with open('data/75.scale.model', encoding='utf-8') as f:
+        lines = f.readlines()
+
+    lower = []
+    higher = []
+    limit = 10
+    for line in lines:
+        weight = line.split()
+        if re.search('[a-zA-Z]+', weight[0]) is None:
+            if len(lower) < limit:
+                lower.append(weight)
+            elif weight[0] < sorted(lower, key=lambda x: x[0], reverse=True)[-1][0]:
+                lower.remove(sorted(lower, key=lambda x: x[0])[-1])
+                lower.append(weight)
+
+            if len(higher) < limit:
+                higher.append(weight)
+            elif weight[0] < sorted(higher, key=lambda x: x[0], reverse=True)[-1][0]:
+                higher.remove(sorted(higher, key=lambda x: x[0])[-1])
+                higher.append(weight)
+
+    print('Highest feature are')
+    for w in sorted(higher, key=lambda x: x[0]):
+        weight = w.pop(0)
+        print(weight, '\t', ' '.join(w), '\n')
+
+    print('Lowest feature are')
+    for w in sorted(lower, key=lambda x: x[0]):
+        weight = w.pop(0)
+        print(weight, '\t', ' '.join(w), '\n')
