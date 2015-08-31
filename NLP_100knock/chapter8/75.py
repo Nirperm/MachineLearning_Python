@@ -35,6 +35,34 @@ def create_scale(corpus, feature):
     f.close()
 
 
+def highest_rank(models, limit=10):
+    higher = []
+
+    for line in models:
+        weight = line.split()
+        if re.search('[a-zA-Z]+', weight[0]) is None:
+            if len(higher) < limit:
+                higher.append(weight)
+            elif weight[0] < sorted(higher, key=lambda x: x[0], reverse=True)[-1][0]:
+                higher.remove(sorted(higher, key=lambda x: x[0])[-1])
+                higher.append(weight)
+    return higher
+
+
+def lowest_rank(models, limit=10):
+    lower = []
+
+    for line in models:
+        weight = line.split()
+        if re.search('[a-zA-Z]+', weight[0]) is None:
+            if len(lower) < limit:
+                lower.append(weight)
+            elif weight[0] < sorted(lower, key=lambda x: x[0], reverse=True)[-1][0]:
+                lower.remove(sorted(lower, key=lambda x: x[0])[-1])
+                lower.append(weight)
+    return lower
+
+
 if __name__ == '__main__':
     lines = load_txt()
     stems = stem(lines)
@@ -60,25 +88,10 @@ if __name__ == '__main__':
         subprocess.call(cmd2, shell=True)
 
     with open('data/75.scale.model', encoding='utf-8') as f:
-        lines = f.readlines()
+        models = f.readlines()
 
-    lower = []
-    higher = []
-    limit = 10
-    for line in lines:
-        weight = line.split()
-        if re.search('[a-zA-Z]+', weight[0]) is None:
-            if len(lower) < limit:
-                lower.append(weight)
-            elif weight[0] < sorted(lower, key=lambda x: x[0], reverse=True)[-1][0]:
-                lower.remove(sorted(lower, key=lambda x: x[0])[-1])
-                lower.append(weight)
-
-            if len(higher) < limit:
-                higher.append(weight)
-            elif weight[0] < sorted(higher, key=lambda x: x[0], reverse=True)[-1][0]:
-                higher.remove(sorted(higher, key=lambda x: x[0])[-1])
-                higher.append(weight)
+    higher = highest_rank(models)
+    lower = lowest_rank(models)
 
     print('Highest feature are')
     for w in sorted(higher, key=lambda x: x[0]):
