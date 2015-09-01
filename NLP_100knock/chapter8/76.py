@@ -7,34 +7,35 @@
 import math
 # import os
 import re
-import sys
-sys.path.append('/home/vagrant/libsvm-3.20/python/')
+# import sys
+# sys.path.append('/home/vagrant/libsvm-3.20/python/')
 import numpy as np
 from section_72 import load_txt
 from section_72 import stem
 from section_72 import create_feature
-from section_73 import modelize
-from svm import *
-from svmutil import *
+from section_75 import create_dict
 
-# FIXME: setup sys.path
-# FIXME: maybe data/75.scale.model is wrong
+# from section_73 import modelize
+# from svm import *
+# from svmutil import *
+
 
 if __name__ == '__main__':
-    """
     lines = load_txt()
     stems = stem(lines)
     feature = create_feature(lines, stems)
-    logreg = modelize(feature)
+    # logreg = modelize(feature)
+    # data = feature.data
 
-    data = feature.data
     label = feature.target
-    """
+    dictionary = create_dict(stems)  # key is id, value is stemming word
 
-    # 配列の初期化
-    ids = []  # 素性id配列
-    values = []  # 素性値配列
-    labels = []
+    keys = [key for key in dictionary.keys()]
+
+    """
+    ids = []  # feature id
+    values = []  # feature value
+    labels = []  # feature label
     for line in open('data/75.scale.model'):
         field = line.strip().split(' ')
         if re.search('[a-zA-Z]+', field[0]) is None:
@@ -46,9 +47,13 @@ if __name__ == '__main__':
                 values.append(field2[1])
 
     values = np.array(values, dtype=float)
+    """
 
-    # コサイン正規化
+    # regulation of Cosine
+    """
     values = values / np.linalg.norm(values)
+    val = sum(values)
     print(math.exp(-val))
     print(1.0 / (1.0 + math.exp(-val)))
     # print(len([1.0 / (1.0 + math.exp(-x)) for x in values]))
+    """

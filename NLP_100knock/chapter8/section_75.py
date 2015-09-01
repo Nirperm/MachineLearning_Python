@@ -79,9 +79,8 @@ if __name__ == '__main__':
     if '75.scale' not in os.listdir('./data/'):
         create_scale(corpus, feature)
 
-    # 素性数が多い場合、線形カーネル(ただの内積): K(u,v) = uTvを使うと上手くいきやすいので -t 0を使う
     if '75.scale.model' not in os.listdir('./data'):
-        cmd1 = 'svm-train -t 0 -h 0 data/75.scale ; mv 75.scale.model data/'
+        cmd1 = 'svm-train data/75.scale ; mv 75.scale.model data/'
         subprocess.call(cmd1, shell=True)
 
         cmd2 = 'svm-predict data/75.scale data/75.scale.model data/accuracy.txt > data/accuracy.txt'
