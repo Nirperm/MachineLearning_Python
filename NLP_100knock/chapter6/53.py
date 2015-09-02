@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 if __name__ == '__main__':
     tree = ET.parse('data/nlp.xml')
     root = tree.getroot()
-    words = root.findall('./document/sentences/sentence/tokens/token/word')
+    words = root.findall('.//word')
 
     for word in words:
         print(word.text)
