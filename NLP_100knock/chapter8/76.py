@@ -24,14 +24,17 @@ def predict(prob, thresh):
 
 
 def attach_label(keys):
+    f = open('data/76.txt', 'w')
     for line in open('data/75.scale.model'):
         field = line.strip().split(' ')
         if re.search('[a-zA-Z]+', field[0]) is None:
             label = field.pop(0)
             feature_dict = dict(map(int, x.split(':')) for x in field)
             prob = probability(feature_dict, keys)
-            print(label, '\t', predict(prob, 0.5), '\t', prob)
 
+            f.write(label + ' ' + predict(prob, 0.5) + ' ' + str(prob) + '\n')
+            print(label + '\t', predict(prob, 0.5), '\t', prob)
+    f.close()
 
 if __name__ == '__main__':
     lines = load_txt()
