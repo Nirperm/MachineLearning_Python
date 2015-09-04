@@ -31,7 +31,8 @@ if __name__ == '__main__':
     heads = root.findall('.//head')
     head_indexies = [int(head.text) for head in heads]
 
-    """
-    for start, end in zip(start_indexies, end_indexies):
-        print(' '.join(sentence_list)[start:end].strip())
-    """
+    nested_list = [sentence.split() for sentence in sentence_list]
+
+    # FIXME i can not understand(pending)
+    for m_s_id, start, end, head in zip(m_s_ids, start_indexies, end_indexies, head_indexies):
+        print(sentence_list[m_s_id - 1][start:end].strip(), '\t', nested_list[m_s_id - 1][head - 1])
