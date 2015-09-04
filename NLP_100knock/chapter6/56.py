@@ -6,33 +6,90 @@ Stanford Core NLPの共参照解析の結果に基づき，
 元の参照表現が分かるように配慮せよ
 """
 
-import xml.etree.ElementTree as ET
-# refer to dcoref info http://nlp.stanford.edu/software/corenlp_xml_description.shtml
+from collections import defaultdict
+
+
+def get_content_tags(line, tag_name):
+    return line.strip().replace('/', '').replace(tag_name, '')
+
+
+def get_next_num(len_tags, now):
+    next_num = now + 1
+    if len_tags == next_num:
+        next_num = 0
+    return next_num
+
+
+def load_mention(xml_name):
+    motion_dict = defaultdict(lambda:  defaultdict(list))
+    gct = get_content_tags
+    tag_head = '<head>'
+    tag_end = '<end>'
+    tag_start = '<start>'
+    tag_sentence = '<sentence>'
+    tags = ['<head>', '<end>', '<start>',  '<sentence>']
+    tag_num = 0
+    len_tags = len(tags)
+    tag = tags[tag_num]
+
+    for line in open(xml_name).readlines()[::-1]:
+        if '</dependencies>' in line:
+            break
+        elif tag in line:
+            if tag == tag_head:
+                head = gct(line, tag_head)
+            elif tag == tag_end:
+                end = gct(line, tag_end)
+            elif tag == tag_start:
+                start = gct(line, tag_start)
+            elif tag == tag_sentence and int(end) - int(head) != 1:
+                sentence = gct(line, tag_sentence)
+                motion_dict[sentence][tag_end].append(end)
+                motion_dict[sentence][tag_head].append(head)
+                motion_dict[sentence][tag_start].append(start)
+            tag_num = get_next_num(len_tags, tag_num)
+            tag = tags[tag_num]
+
+    return motion_dict
+
+
+def get_parenthesis(motion_dict, token_id):
+    if token_id in motion_dict['<head>']:
+        if token_id in motion_dict['<start>']:
+            return '[('
+        return '('
+    elif token_id in  motion_dict['<start>']:
+        return '['
+    elif token_id in motion_dict['<end>']:
+        return ') ]'
+    return ''
+
+
+def coreference_analysis(xml_name):
+    tag_sentence_id = '<sentence id='
+    sentence_id = 0
+    tag_word = '<word>'
+    tag_token_id = '<token id'
+    token_id = 0
+    parenthesis = ''
+    motion_dict = load_mention(xml_name)
+    for line in open(xml_name):
+        if tag_token_id in line:
+            token_id += 1
+            if str(sentence_id) in motion_dict:
+                parenthesis = get_parenthesis(motion_dict[str(sentence_id)], str(token_id))
+                if parenthesis != '':
+                    print(parenthesis)
+
+        elif tag_sentence_id in line:
+            sentence_id += 1
+            token_id = 0
+            print('')
+        elif tag_word in line:
+            print(get_content_tags(line, tag_word))
+
 
 if __name__ == '__main__':
-    tree = ET.parse('data/nlp.xml')
-    root = tree.getroot()
-
-    sentences = root.findall('.//sentence')
-    sentence_list = []  # size is 164
-    for sentence in sentences:
-        sentence_list.append(' '.join(map(lambda x: x.text, sentence.findall('.//word'))))
-
-    """ All coreference size is 114 """
-    mention_sentences = root.findall('.//mention//sentence')
-    m_s_ids = [int(m_s_id.text) for m_s_id in mention_sentences]
-
-    starts = root.findall('.//start')
-    start_indexies = [int(start.text) for start in starts]
-
-    ends = root.findall('.//end')
-    end_indexies = [int(end.text) for end in ends]
-
-    heads = root.findall('.//head')
-    head_indexies = [int(head.text) for head in heads]
-
-    nested_list = [sentence.split() for sentence in sentence_list]
-
-    # FIXME i can not understand(pending)
-    for m_s_id, start, end, head in zip(m_s_ids, start_indexies, end_indexies, head_indexies):
-        print(sentence_list[m_s_id - 1][start:end].strip(), '\t', nested_list[m_s_id - 1][head - 1])
+    xml_name = 'data/nlp.xml'
+    txt_name = 'data/nlp.txt'
+    coreference_analysis(xml_name)
