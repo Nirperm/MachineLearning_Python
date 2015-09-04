@@ -8,7 +8,7 @@
 * `pip install -r requirements.txt`
 * OS package manager install Graphviz, Redis, MongoDB
 * Need additional install of Certifi, MeCab and CaboCha, pydot.  
-* graphviz is is particular kind of install. https://github.com/pygraphviz/pygraphviz/issues/16 and http://qiita.com/shimo_t/items/b761973805f2cf0b2967 
+* graphviz is is particular kind of install. http://pod.hatenablog.com/entry/2015/03/07/163911 and http://qiita.com/shimo_t/items/b761973805f2cf0b2967 
 * pydot is particular kind of install. Run `git clone https://github.com/nlhepler/pydot.git & cd pydot & pip install -e .`
 * In case of MacOS, `brew install libsvm`  
  * `pip install -e git+https://github.com/Salinger/libsvm-python.git#egg=libsvm-python`
