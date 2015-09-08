@@ -7,26 +7,22 @@
 import gzip
 import json
 import pymongo
-
-client = pymongo.MongoClient('localhost', 27017)
-db = client.artist
-col = db.artists
-
-f = gzip.open('data/artist.json.gz', 'rt')
+from pymongo import ASCENDING
 
 
-for line in f:
-    data = json.loads(line)
-    col.insert({'artist_info': data})
-    """
-    if 'aliases' in data:
-        for i in range(len(data['aliases'])):
-            col.ensureIndex({'data': data, 'aliase_id': i, 'aliases_name': data['aliases'][i]['name']})
-    if 'tags' in data:
-        for i in range(len(data['tags'])):
-            col.ensureIndex({'data': data, 'tag_id': i, 'tags': data['tags'][i]['value']})
-    if 'rating' in data:
-        for i in range(len(data['rating'])):
-            col.ensureIndex({'data': data, 'rating_id': i, 'rating_value': data['rating']['value']})
-    """
-f.close()
+def main():
+    client = pymongo.MongoClient('localhost', 27017)
+    db = client.nlp
+    col = db.artists
+
+    for line in gzip.open('data/artist.json.gz', 'rt'):
+        data = json.loads(line)
+        col.insert({'artist_info': data})
+
+    col.create_index([('name', ASCENDING)])
+    col.create_index([('aliases.name', ASCENDING)])
+    col.create_index([('tags.value', ASCENDING)])
+    col.create_index([('rating.value', ASCENDING)])
+
+if __name__ == '__main__':
+    main()
