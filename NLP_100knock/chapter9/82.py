@@ -11,7 +11,7 @@ import random
 
 
 def back_and_forth_ngram():
-    for line in open('data/81_test.txt'):
+    for line in open('data/81_result.txt'):
         spl = line.strip().split()
         for i in range(len(spl)):
             n = random.randint(1, 5)
