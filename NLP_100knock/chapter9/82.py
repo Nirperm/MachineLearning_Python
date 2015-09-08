@@ -11,17 +11,14 @@ import random
 
 
 def back_and_forth_ngram():
-    with open('data/81_result.txt', encoding='utf-8') as f:
-        texts = f.read()
+    for line in open('data/81_test.txt'):
+        spl = line.strip().split()
+        for i in range(len(spl)):
+            n = random.randint(1, 5)
+            all_range_indices = [ii + 1 for ii in range(n)] + [-(ii + 1) for ii in range(n)]
+            context_indices = [ii + i for ii in all_range_indices if ii + i >= 0 and ii + i < len(spl)]
+            print('Current word is ' + ' '.join([spl[i]]) + ':' + '\t' + '\t'.join([spl[ii] for ii in context_indices]))
 
-    texts = [word.split() for word in texts]
-    for word in texts:
-        n = random.randint(1, 5)
-        # print( set(texts[:texts.index(word) + n]) -  set(texts[text.index(word) + n:]) )
-    """
-    for i in range(len(token)):
-        n = random.randint(1, 5)
-        print(token[i: n])
-    """
+
 if __name__ == '__main__':
     back_and_forth_ngram()
