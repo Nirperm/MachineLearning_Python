@@ -1,3 +1,4 @@
+bottle==0.12.8
 # cabocha-python==0.69
 # certifi==14.05.14
 corenlp-python==3.4.1-1
