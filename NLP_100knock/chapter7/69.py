@@ -1,6 +1,8 @@
 import pymongo
-from bottle import run, template
-from bottle import get, post, request
+from bottle import get, request
+from bottle import run
+from bottle import jinja2_template as template
+from collections import OrderedDict
 
 
 @get('/')
@@ -8,29 +10,35 @@ def form():
     return template('form_69')
 
 
-@get('/do_process')
-def do_process():
-    _name = request.query['name']
-    _aliases_name = request.query['aliases_name']
-    _tag = request.query['tag']
+@get('/search')
+def search():
+    name = request.query['name']
+    aliases_name = request.query['aliases_name']
+    tag = request.query['tag']
 
-    # TODO: show result next action & page
-    return _name, _aliases_name, _tag
+    if name is not '':
+        query = OrderedDict([('name', name)])
+    else:
+        query = OrderedDict()
 
-"""
-def result():
+    if aliases_name is not '':
+        query['aliases.name'] = aliases_name
+    if tag is not '':
+        query['tags'] = {'$elemMatch': {'value': tag}}
+
     client = pymongo.MongoClient('localhost', 27017)
     db = client.nlp
     col = db.artist
-    artist_name = request.query.artist_name
-    # artist_another_name = request.query['aliases']['name']
-    # tag = request.query['tag']
-    ans = list()
-    for i in col.find({'name': artist_name}):
-        if 'area' not in i.keys():
-            i['area'] = 'NoWhere'
-        ans.append({"name": i['name'], 'area': i['area']})
-"""
+
+    result = []
+
+    artists = col.find(query)
+    for artist in artists:
+        result.append(artist)
+    result = sorted(filter(lambda r: 'rating' in r, result), key=lambda x: -x['rating']['count'])
+
+    return template('result_69', result=result)
+
 
 if __name__ == '__main__':
     run(host='0.0.0.0', port=3030, debug=True, reloader=False)
