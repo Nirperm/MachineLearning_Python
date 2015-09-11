@@ -4,7 +4,7 @@ bottle==0.12.8
 corenlp-python==3.4.1-1
 flake8==2.2.5
 joe==0.0.5
-ipython==2.3.1
+ipython4.0.0
 gensim==0.12.1
 # libsvm (3.14)
 lxml==3.4.4
@@ -12,7 +12,7 @@ matplotlib==1.4.2
 # mecab-python==0.996
 nltk==3.0.4
 pep8==1.5.7
-pip==1.5.6
+pip==7.1.2
 # pydot (1.0.29)
 pyflakes==0.8.1
 pymongo==2.7.2
