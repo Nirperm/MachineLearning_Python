@@ -11,48 +11,31 @@
 
 始める  で      ここで
 見る    は を   吾輩は ものを
-
 """
 
-from lxml import etree as ET
-from collections import defaultdict
+
+from section_41 import make_text_chunk
 
 
-def get_reputation(xml):
-    reputation = defaultdict(list)
-    origin = defaultdict(list)
-    # f = open('data/46_result.txt', 'w')
-    for sentence in xml.findall('.//sentence'):
-        sentence_id = sentence.attrib['id']
-        for chunk in sentence:
-            link = chunk.attrib['link']
-            print(link)
-            for tok in chunk:
-                feature = tok.attrib['feature'].strip().split(',')
-                part = feature[0]
-                """
-                if part == '動詞':
-                    verb_word = feature[-3]
-                """
-                """
-                print(sentence_id + '\t' + link + '\t' + tok.text)
-                origin[sentence_id].append({link: tok.text})
-                print(sorted(origin.items()))
-                """
-                # res = get_next_chunk(sentence_id, link, part)
-
-
-def get_next_chunk(sentence_id, link_id, ex_part):
-    if link_id == '-1':
-        return None
-    sentence = xml.find(".//sentence[@id='%s']" % sentence_id)
-    chunk = sentence.find(".//chunk[@id='%s']" % link_id)
-    tok_list = chunk.findall(".//tok")
-    print([x.text for x in tok_list])
-    # print([x for x in tok_list if x.attrib[""]])
-
+def get_verb_frame(text_chunk_list):
+    particle = '助詞'
+    verb = '動詞'
+    get_pattern_flag = False
+    for sentence_chunk_list in text_chunk_list:
+        for chunk in sentence_chunk_list:
+            get_pattern_flag = False
+            particle_phrase = ''
+            particle_words = ''
+            for num in chunk.srcs:
+                num = int(num)
+                if chunk.check_phrase_pos(verb) and sentence_chunk_list[num].check_phrase_pos(particle):
+                    particle_words += str(sentence_chunk_list[num].get_pos_word(particle))
+                    particle_phrase += sentence_chunk_list[num].get_phrase()
+                    particle_phrase += ' '
+                    get_pattern_flag = True
+            if get_pattern_flag:
+                print(chunk.get_pos_word(verb), '\t', particle_words, '\t', particle_phrase)
 
 if __name__ == '__main__':
-    # Optimize: more faseter
-    xml = ET.parse('data/neko8.xml')
-    get_reputation(xml)
+    text_chunk_list = make_text_chunk()
+    get_verb_frame(text_chunk_list)

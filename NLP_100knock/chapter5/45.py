@@ -20,46 +20,32 @@
 """
 
 import subprocess
-from lxml import etree as ET
-from collections import defaultdict
+
+import subprocess
+from section_41 import make_text_chunk
 
 
-def get_reputation(xml):
-    reputation = defaultdict(list)
+def get_case_pattern(text_chunk_list):
+    particle = '助詞'
+    verb = '動詞'
     f = open('data/45_result.txt', 'w')
-    for sentence in xml.findall('.//sentence'):
-        sentence_id = sentence.attrib['id']
-        for chunk in sentence:
-            link = chunk.attrib['link']
-            for tok in chunk:
-                feature = tok.attrib['feature'].strip().split(',')
-                part = feature[0]
-                if link == '-1':
-                    break
-                if part == '動詞':
-                    verb_word = feature[-3]
-                    res = get_next_chunk(sentence_id, link, part)
-                    if res is None:
-                        break
-                    particle_word = res
-                    reputation[verb_word].append(particle_word)
-    for key, value in reputation.items():
-        value.sort()
-        f.write(key + '\t' + ' '.join(value) + '\n')
+    get_pattern_flag = False
+    for sentence_chunk_list in text_chunk_list:
+        for chunk in sentence_chunk_list:
+            get_pattern_flag = False
+
+            particle_words = ''
+            for num in chunk.srcs:
+                num = int(num)
+                if chunk.check_phrase_pos(verb) and sentence_chunk_list[num].check_phrase_pos(particle):
+                    particle_words += str(sentence_chunk_list[num].get_pos_word(particle))
+                    get_pattern_flag = True
+            if get_pattern_flag:
+                f.write(chunk.get_pos_word(verb) + '\t' + particle_words + '\n')
     f.close()
 
-
-def get_next_chunk(sentence_id, link_id, ex_part):
-    sentence = xml.find(".//sentence[@id='%s']" % sentence_id)
-    chunk = sentence.find(".//chunk[@id='%s']" % link_id)
-    for tok in chunk:
-        feature = tok.attrib['feature'].strip().split(',')
-        if feature[0] == '助詞':
-            return tok.text
-
 if __name__ == '__main__':
-    # Optimize: more faseter
-    xml = ET.parse('data/neko.xml')
-    get_reputation(xml)
+    text_chunk_list = make_text_chunk()
+    get_case_pattern(text_chunk_list)
     cmd = 'grep -e "^する" -e "^見る" -e "^与える" {0} | sed -e "s/\\s/\\n/g" |uniq -c | sort -r -n -k1'.format('data/45_result.txt')
-    subprocess.call(cmd, shell=True)
+    print(subprocess.call(cmd, shell=True))

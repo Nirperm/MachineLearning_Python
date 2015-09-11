@@ -4,24 +4,15 @@
 ただし，句読点などの記号は出力しないようにせよ．
 """
 
-from section_40 import Morph
-from section_41 import Chunk
-
-cabocha_list = Morph.read_cabocha()
-teos_list = Chunk.read_cabocha()
-
-chunk = Chunk(cabocha_list[0], teos_list[0], teos_list[1])
-
-surface_list = []
-dst_list = []
-
-for dst in chunk.dst:
-    dst_list.append(dst)
-
-for line_list in chunk.morphs:
-    if len(line_list) > 1 and line_list[1] != '記号':
-        surface_list.append(line_list[0])
+from section_41 import make_text_chunk
 
 
-print(','.join(dst_list).replace(',', '\t'))
-print(','.join(surface_list).replace(',', '\t'))
+def pair_modification_structure(text_chunk_list):
+    for sentence_chunk_list in text_chunk_list:
+        for chunk in sentence_chunk_list:
+            if chunk.dst != '-1':
+                print(chunk.get_phrase(), '\t', sentence_chunk_list[int(chunk.dst)].get_phrase(), '\n')
+
+if __name__ == '__main__':
+    text_chunk_list = make_text_chunk()
+    pair_modification_structure(text_chunk_list)
