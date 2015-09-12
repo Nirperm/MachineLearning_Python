@@ -6,26 +6,27 @@
 
 # FIXME: Too heavy
 
-import gensim
+from gensim.models import word2vec
 
 
-def vectolize():
-    with open('../chapter9/data/81_result.txt', encoding='utf') as f:
-        lines = f.readlines()
+def section_86():
+    print 'section_86'
+    print(model['United_States'])
 
-    words = [[word for word in line.split()] for line in lines]
-    dictionary = gensim.corpora.Dictionary(words)
-    dictionary.save('/tmp/section90.dict')
+def section_87():
+    print 'section_87'
+    print(model.n_similarity(['United_States'], ['U.S']))
 
-    """ 辞書オブジェクトの語彙で低頻度と高頻度のワードは除く """
-    dictionary.filter_extremes(no_below=3, no_above=0.6)
+def section_88():
+    print 'section_88'
+    for w,s in  model.most_similar(['England']):
+        print(w, s)
 
-    corpus = [dictionary.doc2bow(word) for word in words]
-
-    gensim.corpora.MmCorpus.serialize('/tmp/section90.mm', corpus)
-
-    numpy_matrix = gensim.matutils.corpus2dense(corpus, num_terms=len(corpus))
-    print(numpy_matrix)
+def section_89():
+    print 'section_89'
+    print model['Spain'] + model['Athens'] - model['Madrid']
+    for w,s in  model.most_similar(['Spain', 'Athens'], ['Madrid']):
+        print(w, s)
 
 if __name__ == '__main__':
-    vectolize()
+    model = word2vec.Word2Vec.load_word2vec_format('data/fb_post.bin', binary=True)
