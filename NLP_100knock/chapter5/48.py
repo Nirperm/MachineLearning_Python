@@ -13,3 +13,30 @@
 人間という -> ものを -> 見た
 ものを -> 見た
 """
+
+import sys
+from section_41 import make_text_chunk
+
+
+# FIXME: bugy
+
+def extract_noun_to_root(sentence_chunk_list, noun_phrase, dst):
+    while dst != '-1':
+
+        sys.stdout.write('-> ' + sentence_chunk_list[int(dst)].get_phrase() + '\t')
+        dst = sentence_chunk_list[int(dst)].dst
+
+
+def get_pass(text_chunk_list):
+    noun = '名詞'
+    for sentence_chunk_list in text_chunk_list:
+        for chunk in sentence_chunk_list:
+            if chunk.check_phrase_pos(noun) and chunk.dst != '-1':
+                noun_phrase = chunk.get_phrase()
+                extract_noun_to_root(sentence_chunk_list, noun_phrase, chunk.dst)
+        print('\n')
+
+
+if __name__ == '__main__':
+    text_chunk_list = make_text_chunk()
+    get_pass(text_chunk_list)

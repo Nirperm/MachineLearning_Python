@@ -1,114 +1,113 @@
 """
-48. 名詞から根へのパスの抽出
-文中のすべての名詞を含む文節に対し，その文節から構文木の根に至るパスを抽出せよ． ただし，構文木上のパスは以下の仕様を満たすものとする．
+49. 名詞間の係り受けパスの抽出
+文中のすべての名詞句のペアを結ぶ最短係り受けパスを抽出せよ．ただし，名詞句ペアの文節番号がiとj（i<j）のとき，係り受けパスは以下の仕様を満たすものとする．
 
-各文節は（表層形の）形態素列で表現する
-パスの開始文節から終了文節に至るまで，各文節の表現を"->"で連結する
-「吾輩はここで始めて人間というものを見た」という文（neko.txt.cabochaの8文目）から，次のような出力が得られるはずである．
+問題48と同様に，パスは開始文節から終了文節に至るまでの各文節の表現（表層形の形態素列）を"->"で連結して表現する
+文節iとjに含まれる名詞句はそれぞれ，XとYに置換する
+また，係り受けパスの形状は，以下の2通りが考えられる．
 
-吾輩は -> 見た
-ここで -> 始めて -> 人間という -> ものを -> 見た
-人間という -> ものを -> 見た
-ものを -> 見た
+文節iから構文木の根に至る経路上に文節jが存在する場合: 文節iから文節jのパスを表示
+上記以外で，文節iと文節jから構文木の根に至る経路上で共通の文節kで交わる場合: 文節iから文節kに至る直前のパスと文節jから文節kに至る直前までのパス，文節kの内容を"|"で連結して表示
+例えば，「吾輩はここで始めて人間というものを見た。」という文（neko.txt.cabochaの8文目）から，次のような出力が得られるはずである．
+
+Xは | Yで -> 始めて -> 人間という -> ものを | 見た
+Xは | Yという -> ものを | 見た
+Xは | Yを | 見た
+Xで -> 始めて -> Y
+Xで -> 始めて -> 人間という -> Y
+Xという -> Y
 
 """
 
+import sys
+from section_41 import make_text_chunk
 
-import CaboCha
+
+def root_word(sentence_chunk_list, dst):
+    word_dst = dst
+    prev_dst = int(dst)
+
+    while word_dst != '-1':
+        word_dst = int(word_dst)
+        prev_dst = word_dst
+        word_dst = sentence_chunk_list[word_dst].dst
+    return sentence_chunk_list[prev_dst].get_phrase()
 
 
-def treeparse(sentence):
+def extract_noun_to_root(sentence_chunk_list, noun_phrase, dst):
+    # next_dst = sentence_chunk_list[int(dst)].dst
+    sys.stdout.write(noun_phrase)
 
-    tree = c.parse(sentence)
-    size = tree.size()
+    while 1:
+        if sentence_chunk_list[int(dst)].dst == '-1':
+            break
+        sys.stdout.write('-> ' + sentence_chunk_list[int(dst)].get_phrase(),)
+        dst = sentence_chunk_list[int(dst)].dst
+        # next_dst = sentence_chunk_list[int(dst)].dst
+        # sys.stdout.write(dst + next_dst)
 
-    own_id = 0
-    phrase_list = []
-    phrase = ''
-    phrase_id = 0
-    phrase_link = 0
-    dependency_particle = 0
-    case_particle = 0
-    subj = ''
-    obj = ''
-    pred = ''
 
-    for i in range(0, size):
-        token = tree.token(i)
+def make_phrase_list(sentence_chunk_list, noun_phrase, dst):
+    phrase_list = list()
+    phrase_list.append(noun_phrase)
+    while sentence_chunk_list[int(dst)].dst != '-1':
+        phrase_list.append(sentence_chunk_list[int(dst)].get_phrase())
+        dst = sentence_chunk_list[int(dst)].dst
+    return phrase_list
 
-        if token.chunk:
-            if (phrase != ''):
-                phrase_list.append((phrase, phrase_id, phrase_link, dependency_particle, case_particle))  # 前の句をリストに追加
-            dependency_particle = 0
-            case_particle = 0
-            word = token.normalized_surface
-            word_id = own_id
-            word_link = token.chunk.link
-            own_id += 1
-        else:
-            word += token.normalized_surface
-        feature = (token.feature).split(',')
-        if (feature[1] == '係助詞'):
-            dependency_particle = 1
-        if (feature[1] == '格助詞'):
-            case_particle = 1
 
-        phrase_list.append((word, word_id, word_link, dependency_particle, case_particle))  # 最後にも前の句をリストに追加
+def check_same_phrase(phrase_list1, phrase_list2):
+    for phrase in phrase_list1:
+        if phrase in phrase_list2:
+            return True, phrase
 
-    for word_chunk in phrase_list:
-        # print(k[1], k[0], k[2], k[3], k[4])
-        if (word_chunk[2] == -1):  # link == -1
-            pred_id = word_id  # この時のidを覚えておく
-    """
-    print('--------')
-    print('述語句')
-    """
-    for k in phrase_list:
-        if (word_chunk[1] == pred_id):  # pred_idと同じidを持つ句を探す
-            pass
-            # print(k[1], k[0], k[2], k[3], k[4])
-    """
-    print('--------')
-    print('述語句に係る句')
-    """
-    for word_chunk in phrase_list:
-        if (word_chunk[2] == pred_id):  # pred_idと同じidをリンク先に持つ句を探す
-            pass
-            # print(k[1], k[0], k[2], k[3], k[4])
-    """
-    print('--------')
-    print('その中から、主語句と目的語句を選ぶ')
-    """
-    for word_chunk in phrase_list:
-        if (word_chunk[2] == pred_id):  # pred_id と同じidをリンク先に持つ句を探す
-            if (word_chunk[3] == 1):
-                subj = word_chunk[0]
-                # subj += ' -> ' + word_chunk[0]
-            if (word_chunk[4] == 1):
-                obj = word_chunk[0]
-                # obj += ' -> ' + word_chunk[0]
-        if (word_chunk[1] == pred_id):
-                pred = word_chunk[0]
-                # pred += ' -> ' + word_chunk[0]
+    return False, 'NULL'
 
-    return (subj + ' -> ' + obj + ' -> ' + pred + '\n')
+
+def make_minimum_pass(sentence_chunk_list, noun_num_list):
+    # particle = '助詞'
+    noun = '名詞'
+    match_flag = False
+    count = 0
+    sub_noun_num_list = list(noun_num_list)
+    for phrase_num in noun_num_list:
+        count += 1
+        sub_noun_num_list.remove(phrase_num)
+        chunk = sentence_chunk_list[phrase_num]
+        first_word = chunk.phrase_replace(noun, 'X')
+        top_phrase_list = make_phrase_list(sentence_chunk_list, chunk.get_phrase(), chunk.dst)
+        for other_num in sub_noun_num_list:
+            next_chunk = sentence_chunk_list[other_num]
+            next_phrase_list = make_phrase_list(sentence_chunk_list, next_chunk.get_phrase(), next_chunk.dst)
+            match_flag, match_num = check_same_phrase(top_phrase_list, next_phrase_list[:-1])
+            sys.stdout.write(first_word)
+            if match_flag:
+                sys.stdout.write(' -> ' + ' -> '.join(next_phrase_list[:-1]) + ' -> Y')
+            else:
+                print(' | ',)
+                extract_noun_to_root(sentence_chunk_list, next_chunk.phrase_replace(noun, 'Y'), next_chunk.dst)
+                if not next_chunk.get_phrase() == root_word(sentence_chunk_list, chunk.dst):
+                    sys.stdout.write(' | ' + root_word(sentence_chunk_list, chunk.dst))
+
+
+def make_noun_num_list(sentence_chunk_list):
+    noun_num_list = list()
+    noun = '名詞'
+    for chunk in sentence_chunk_list:
+        if chunk.check_phrase_pos(noun):
+            noun_num_list.append(chunk.num)
+    return noun_num_list
+
+
+def get_trace_pass(text_chunk_list):
+    for sentence_chunk_list in text_chunk_list:
+        # check_print = False
+
+        noun_num_list = make_noun_num_list(sentence_chunk_list)
+        if noun_num_list != []:
+            make_minimum_pass(sentence_chunk_list, noun_num_list)
 
 
 if __name__ == '__main__':
-    c = CaboCha.Parser()
-    f = open('data/neko.txt', encoding='utf-8')
-    content = f.read()
-    f.close()
-
-    result = ''
-    sentence = content.split('。')
-    for line in sentence:
-        if (line != ''):
-            cabocha_answer = treeparse(line)
-
-        if (result == ''):
-            result = cabocha_answer
-        else:
-            result += cabocha_answer
-
-    print(result)
+    text_chunk_list = make_text_chunk()
+    get_trace_pass(text_chunk_list)
