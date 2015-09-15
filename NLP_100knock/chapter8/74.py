@@ -14,7 +14,7 @@ from section_73 import modelize
 
 
 def predict(logreg, feature):
-    sentence = 'rodriguez . . . was unable to reproduce the special spark between the characters that made the first film such a delight .'.split()
+    sentence = 'rodriguez . . . was unable to reproduce the special spark between the characters that made the first film such a delight .'.split()  #=> label is -1(neg)
     input_vec = np.zeros(len(feature.data))
 
     nested_stem = stem(sentence)  # stemed word list in nested list
