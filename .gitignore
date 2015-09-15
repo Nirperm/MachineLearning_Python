@@ -23,6 +23,7 @@ NLP_100knock/chapter8/cross_validation/*.model
 NLP_100knock/chapter9/data/enwiki-20150112-400-r10*.txt
 NLP_100knock/chapter9/data/tokenaize-enwiki-20150112-400-r10*.txt
 NLP_100knock/chapter9/data/81_result.txt
+NLP_100knock/chapter10/data/questions-words.txt
 
 # Distribution / packaging
 .Python
