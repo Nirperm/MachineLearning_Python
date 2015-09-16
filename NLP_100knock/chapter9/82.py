@@ -17,7 +17,7 @@ def back_and_forth_ngram():
             n = random.randint(1, 5)
             all_range_indices = [ii + 1 for ii in range(n)] + [-(ii + 1) for ii in range(n)]
             context_indices = [ii + i for ii in all_range_indices if ii + i >= 0 and ii + i < len(spl)]
-            print('Current word is ' + ' '.join([spl[i]]) + ':' + '\t' + '\t'.join([spl[ii] for ii in context_indices]))
+            print(' '.join([spl[i]]) + '\t' + '\t'.join([spl[ii] for ii in context_indices]))
 
 
 if __name__ == '__main__':
