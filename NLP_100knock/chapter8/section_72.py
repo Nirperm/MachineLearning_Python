@@ -23,8 +23,8 @@ def stem(lines):
 
 
 def create_feature(lines, stems):
-    target_labels = [1 if line[:2] == '+1' else -1 for line in lines]
-    Sentiment = namedtuple("Sentiment", ["data", "target"])
+    target_labels = ['+1' if line[:2] == '+1' else '-1' for line in lines]
+    Sentiment = namedtuple('Sentiment', ['data', 'target'])
     feature = Sentiment(stems, target_labels)
     return feature
 
