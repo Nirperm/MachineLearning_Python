@@ -18,12 +18,12 @@ def modelize(feature):
     neg_vec = np.zeros(len(word_list))
 
     for i, l in enumerate(label):
-        if l == 1:
+        if l == '+1':
             pos_vec[i] += 1
         else:
             neg_vec[i] += 1
     logreg = linear_model.LogisticRegression()
-    logreg.fit([pos_vec, neg_vec], [1, -1])
+    logreg.fit([pos_vec, neg_vec], ['+1', '-1'])
     return logreg
 
 
