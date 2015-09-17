@@ -86,6 +86,12 @@ if __name__ == '__main__':
         cmd2 = 'svm-predict data/75.scale data/75.scale.model data/accuracy.txt > data/accuracy.txt'
         subprocess.call(cmd2, shell=True)
 
+        cmd3 = 'zip -r data/75.scale.model.zip data/75.scale.model'
+        subprocess.call(cmd3, shell=True)
+
+        cmd4 = 'unzip data/75.scale.model.zip data/'
+        subprocess.call(cmd4, shell=True)
+
     with open('data/75.scale.model', encoding='utf-8') as f:
         models = f.readlines()
 

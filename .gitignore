@@ -17,7 +17,9 @@ NLP_100knock/chapter5/data/neko.txt.cabocha
 NLP_100knock/chapter5/data/neko.xml
 NLP_100knock/chapter5/data/45_result.txt
 NLP_100knock/chapter8/data/accuracy.txt
+NLP_100knock/chapter8/data/75.scale.model
 NLP_100knock/chapter8/data/75.scale
+NLP_100knock/chapter8/data/76.txt
 NLP_100knock/chapter8/cross_validation/*.txt
 NLP_100knock/chapter8/cross_validation/*.model
 NLP_100knock/chapter9/data/enwiki-20150112-400-r10*.txt
