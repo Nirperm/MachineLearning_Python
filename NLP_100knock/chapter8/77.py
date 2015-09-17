@@ -8,32 +8,31 @@
 # FIXME: Libsvm output is wrong, fix section_75.py
 
 if __name__ == '__main__':
-    with open('data/76.txt', encoding='utf-8') as f:
-        lines = f.readlines()
+    predict_file = open('data/76.txt', 'r')
 
-    tp = .0  # True Positive
-    fp = .0  # False Positive
-    fn = .0  # True Negative
-    tn = .0  # False Negative
 
-    for line in lines:
-        ans, pred, prob = line.strip().split()
-        if ans == pred:
-            if ans == "+1":
-                tp += 1
-            else:
-                tn += 1
-        else:
-            if ans == "+1":
-                fn += 1
-            else:
-                fp += 1
+    all_count = 0
+    concord_count = 0
+    correct_count = 0
+    correct_match_count = 0
+    pre = 0
+    for line in predict_file:
+        all_count += 1
+        print(line)
+        correct, predict, prob = line.split()
+        if correct == predict:
+            concord_count += 1
+        if correct == '-1':
+            correct_count += 1
+            if correct == predict:
+                correct_match_count += 1
+        if predict == '+1':
+            pre += 1
 
-    accuracy = (tp + tn) / float(tp + tn + fn + fp)
-    precision = tp / float(tp + fp)
-    recall = tp / float(tp + fn)
-    f1 = 2 * precision * recall / (precision + recall)
-    print("accuracy", accuracy)
-    print("precision", precision)
-    print("recall", recall)
-    print("f1", f1)
+    print('rate of concordance:', float(concord_count) / float(all_count))
+    print(float(pre))
+    pre = correct_match_count / float(pre)
+    rec = correct_match_count / float(correct_count)
+    print('Precision:', pre)
+    print('Recall:', rec)
+    print('F-measure:', 2 * rec * pre / (rec + pre))

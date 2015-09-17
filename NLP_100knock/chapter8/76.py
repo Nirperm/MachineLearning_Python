@@ -8,39 +8,36 @@ import math
 import re
 from section_72 import load_txt
 from section_72 import stem
-from section_75 import create_dict
 
 
 def sigmoid(x):
     return 1.0 / (1.0 + math.exp(-x))
 
 
-def probability(feature_dict, keys):
-    return sigmoid(sum(feature_dict.get(k, 0) for k in keys))
+def probability(feature_dict):
+    return sigmoid(sum(feature_dict.get(k, 0) for k in feature_dict))
 
 
 def predict(prob, thresh):
     return '-1' if prob < thresh else '+1'
 
 
-def attach_label(keys):
+def attach_label():
     f = open('data/76.txt', 'w')
     for line in open('data/75.scale.model'):
         field = line.strip().split(' ')
         if re.search('[a-zA-Z]+', field[0]) is None:
             label = field.pop(0)
             feature_dict = dict(map(int, x.split(':')) for x in field)
-            prob = probability(feature_dict, keys)
+            prob = probability(feature_dict)
 
-            f.write(label + ' ' + predict(prob, 0.5) + ' ' + str(prob) + '\n')
-            print(label + '\t', predict(prob, 0.5), '\t', prob)
+            # thresh is bugy(0.9999), perphaps the cause is utilize Libsvm 75.scale.model output
+            f.write(label + ' ' + predict(prob, 0.9999) + ' ' + str(prob) + '\n')
+            print(label + '\t', predict(prob, 0.9999), '\t', prob)
     f.close()
 
 if __name__ == '__main__':
     lines = load_txt()
     stems = stem(lines)
 
-    dictionary = create_dict(stems)  # key is id, value is stemming word
-    keys = [key for key in dictionary.keys()]
-
-    attach_label(keys)
+    attach_label()
