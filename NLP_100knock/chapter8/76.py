@@ -23,7 +23,7 @@ def sigmoid(x):
 
 def extract_features(text):
     lemmatiser = WordNetLemmatizer()
-    return [lemmatiser.lemmatize(tok, pos='v') for tok in text if not tok in STOPWORDS]
+    return [lemmatiser.lemmatize(tok, pos='v') for tok in text if tok not in STOPWORDS]
 
 
 def probability(feat):
