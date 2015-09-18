@@ -5,39 +5,39 @@
 """
 
 import math
-import re
-from section_72 import load_txt
-from section_72 import stem
+from constant import STOPWORDS
+from nltk.stem import WordNetLemmatizer
+
+
+def read_model(d):
+    for line in open('data/73_model.txt'):
+        if line.startswith('@'):
+            continue
+        spl = line.strip().split()
+        d[spl[1]] = float(spl[0])
 
 
 def sigmoid(x):
     return 1.0 / (1.0 + math.exp(-x))
 
 
-def probability(feature_dict):
-    return sigmoid(sum(feature_dict.get(k, 0) for k in feature_dict))
+def extract_features(text):
+    lemmatiser = WordNetLemmatizer()
+    return [lemmatiser.lemmatize(tok, pos='v') for tok in text if not tok in STOPWORDS]
+
+
+def probability(feat):
+    return sigmoid(sum(model.get(f, 0) for f in feat))
 
 
 def predict(prob, thresh):
     return '-1' if prob < thresh else '+1'
 
-
-def attach_label():
-    f = open('data/76.txt', 'w')
-    for line in open('data/75.scale.model'):
-        field = line.strip().split(' ')
-        if re.search('[a-zA-Z]+', field[0]) is None:
-            label = field.pop(0)
-            feature_dict = dict(map(int, x.split(':')) for x in field)
-            prob = probability(feature_dict)
-
-            # thresh is bugy(0.9999), perphaps the cause is utilize Libsvm 75.scale.model output
-            f.write(label + ' ' + predict(prob, 0.9999) + ' ' + str(prob) + '\n')
-            print(label + '\t', predict(prob, 0.9999), '\t', prob)
-    f.close()
-
-if __name__ == '__main__':
-    lines = load_txt()
-    stems = stem(lines)
-
-    attach_label()
+model = dict()
+read_model(model)
+for line in open('data/sentiment.txt'):
+    spl = line.strip().split()
+    label = spl[0]
+    feat = extract_features(spl[1:])
+    prob = probability(feat)
+    print('%s\t%s\t%f' % (label, predict(prob, 0.5), prob))
