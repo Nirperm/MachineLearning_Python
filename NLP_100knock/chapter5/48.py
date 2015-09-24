@@ -14,17 +14,16 @@
 ものを -> 見た
 """
 
-import sys
 from section_41 import make_text_chunk
 
 
-# FIXME: bugy
-
 def extract_noun_to_root(sentence_chunk_list, noun_phrase, dst):
-    while dst != '-1':
 
-        sys.stdout.write('-> ' + sentence_chunk_list[int(dst)].get_phrase() + '\t')
+    print(noun_phrase)
+    while dst != '-1':
+        print('-> ' + sentence_chunk_list[int(dst)].get_phrase())
         dst = sentence_chunk_list[int(dst)].dst
+    print('\n')
 
 
 def get_pass(text_chunk_list):
