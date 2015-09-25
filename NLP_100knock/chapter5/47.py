@@ -17,7 +17,9 @@
 コーパス中で頻出する述語と助詞パターン
 """
 
-
+import random
+import subprocess
+import time
 from section_41 import make_text_chunk
 
 
@@ -28,6 +30,7 @@ def get_functional_verb_frame(text_chunk_list):
     verb = '動詞'
     particle = '助詞'
     pos1 = 'サ変接続'
+    f = open('data/47_result.txt', 'w')
     for sentence_chunk_list in text_chunk_list:
         get_pattern_flag = False
         sahen_flag = False
@@ -49,8 +52,23 @@ def get_functional_verb_frame(text_chunk_list):
                     particle_phrase += ' '
 
                     get_pattern_flag = True
+
+            phrase_particle = []
+            for particle_word  in particle_words.split():
+                if particle_word in particle_phrase:
+                    phrase_particle.append(particle_word)
+
             if get_pattern_flag and sahen_flag:
-                print(sahen_phrase + chunk.get_pos_word(verb), '\t', particle_words, '\t', particle_phrase)
+                f.write(sahen_phrase + chunk.get_pos_word(verb) + '\t' + ' '.join(phrase_particle) + '\t' + particle_phrase + '\n')
+    f.close()
+
+    cmd1 = 'cut -f 1 {0} '.format('data/47_result.txt')
+    subprocess.call(cmd1, shell=True)
+
+    time.sleep(random.randint(1, 10))
+
+    cmd2 = 'cut -f 1,2 {0} '.format('data/47_result.txt')
+    subprocess.call(cmd2, shell=True)
 
 if __name__ == '__main__':
     text_chunk_list = make_text_chunk()
