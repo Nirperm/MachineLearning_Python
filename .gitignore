@@ -27,6 +27,9 @@ NLP_100knock/chapter9/data/tokenaize-enwiki-20150112-400-r10*.txt
 NLP_100knock/chapter9/data/81_result.txt
 NLP_100knock/chapter9/data/82_result.txt
 NLP_100knock/chapter9/data/83_result.pkl
+NLP_100knock/chapter9/data/X.pkl
+NLP_100knock/chapter9/data/Xpca.pkl
+NLP_100knock/chapter9/data/word2id.pkl
 NLP_100knock/chapter10/data/questions-words.txt
 
 # Distribution / packaging
