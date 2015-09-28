@@ -1,3 +1,9 @@
+"""
+89. 加法構成性によるアナロジー
+85で得た単語の意味ベクトルを読み込み，
+vec("Spain") - vec("Madrid") + vec("Athens")を計算し，
+そのベクトルと類似度の高い10語とその類似度を出力せよ．
+"""
 
 import pickle
 import numpy
@@ -22,6 +28,7 @@ def similer_words(query_v, Xpca, word2id, n=10):
                     similers.insert(j, (id2word[i], v, new_sim))
                     break
     return similers
+
 
 if __name__ == '__main__':
     Xpca = pickle.load(open('data/Xpca.pkl', 'rb'))

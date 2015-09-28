@@ -8,9 +8,8 @@ f(∗,c): 文脈語cの出現回数
 N: 単語と文脈語のペアの総出現回数
 """
 
-import os
 import pickle
-from collections import Counter
+
 
 def main():
     uni = dict()
@@ -32,6 +31,7 @@ def main():
     print('N: 単語と文脈語のペアの総出現回数: {0}'.format(N))
 
     pickle.dump([uni, con, co_occ, N], open('data/83_result.pkl', 'wb'))
+
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,10 @@
+"""
+85. 主成分分析による次元圧縮
+84で得られた単語文脈行列に対して，主成分分析を適用し，
+単語の意味ベクトルを300次元に圧縮せよ．
+"""
+
 import pickle
-import scipy
 import sklearn.decomposition
 
 dim = 300
