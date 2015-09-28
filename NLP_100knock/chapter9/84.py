@@ -12,44 +12,25 @@ f(t,c)<10ならば，Xtc=0
 """
 
 import math
-import numpy
 import pickle
+import scipy.sparse as sp
 from collections import defaultdict
 
-ppml_dict = defaultdict(lambda: defaultdict(float))
-cont_dict = pickle.load(open('data/cont.pkl', 'rb'))
-word_dict = pickle.load(open('data/word.pkl', 'rb'))
-co_occur_dict = pickle.load(open('data/co_occur.pkl', 'rb'))
+uni, con, co_occ, N = pickle.load(open('data/83_result.pkl', 'rb'))
+Vt = 10000
+Vc = 10000
+X = sp.lil_matrix((Vt, Vc))
+word2id = dict()
 
-print('start store ppmi')
-voc_set = set()
-count = 68104854  #=> 142425660 N: 単語と文脈語のペアの総出現回数: 68104854
-for pair, freq in co_occur_dict.items():
-    if freq > 9:
-        word, cont = pair.split('\t')
-        numer = count * freq
-        denom = word_dict[word] * cont_dict[cont]
-        if numer > denom:
-            voc_set.update(cont)
-            ppml_dict[word][cont] = math.log(numer / float(denom))
-voc_set.update(word_dict.keys())
-
-print('start convert to matrix')
-vocablary = sorted(ppml_dict.keys())
-all_voc = sorted(list(voc_set))
-term_document_matrix = numpy.zeros((len(all_voc), len(vocablary)))
-
-"""
-print('make_zeros_matrix')
-x_count = 0
-for x_voc in vocablary:
-    temp_matrix = term_document_matrix[x_count]
-    y_count = 0
-    x_count += 1
-    for y_voc in all_voc:
-        if x_voc in ppml_dict and y_voc in ppml_dict[x_voc]:
-            temp_matrix[y_count] = (ppml_dict[x_voc][y_voc])
-            y_count += 1
-"""
-print('write csv')
-numpy.savetxt('data/matrix.csv', term_document_matrix, delimiter=',')
+for i, tok in enumerate(uni.keys()):
+    word2id[tok] = i
+    if i == Vt:
+        break
+    for j, co in enumerate(con.keys()):
+        if j == Vc:
+            break
+        if co_occ.get('%s %s' % (tok, co), 0) >= 10:
+            X[i, j] = max(0, math.log((1.0 * N * co_occ['%s %s' % (tok, co)]) / (uni[tok] * con[co]), 2))
+print(X)
+pickle.dump(X, open('data/X.pkl', 'wb'))
+pickle.dump(word2id, open('data/word2id.pkl', 'wb'))
