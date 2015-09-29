@@ -1,3 +1,7 @@
+"""
+96. 国名に関するベクトルの抽出
+word2vecの学習結果から，国名に関するベクトルのみを抜き出せ．
+"""
 
 import pickle
 from gensim.models import word2vec

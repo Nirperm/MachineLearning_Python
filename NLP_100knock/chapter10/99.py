@@ -1,6 +1,11 @@
+"""
+99. t-SNEによる可視化
+96の単語ベクトルに対して，ベクトル空間をt-SNEで可視化せよ．
+"""
+
 import pickle
 import numpy as np
-import  matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 
 dic = pickle.load(open('data/countries.pkl', 'rb'))

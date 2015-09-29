@@ -1,9 +1,14 @@
+"""
+97. k-meansクラスタリング
+96の単語ベクトルに対して，k-meansクラスタリングをクラスタ数k=5として実行せよ．
+"""
+
 import pickle
-import numpy as  np
+import numpy as np
 from sklearn.cluster import KMeans
 
 dic = pickle.load(open('data/countries.pkl', 'rb'))
-features = [ np.array(v) for v in dic.values()]
+features = [np.array(v) for v in dic.values()]
 km_model = KMeans(n_clusters=5).fit(features)
 for label, name in sorted(zip(km_model.labels_, dic.keys()), key=lambda x: x[0]):
     print(label, name)

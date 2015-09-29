@@ -1,3 +1,13 @@
+"""
+92. アナロジーデータへの適用
+91で作成した評価データの各事例に対して，
+vec(2列目の単語) - vec(1列目の単語) + vec(3列目の単語)を計算し，
+そのベクトルと類似度が最も高い単語と，その類似度を求めよ．
+求めた単語と類似度は，各事例の末尾に追記せよ．
+このプログラムを85で作成した単語ベクトル，90で作成した単語ベクトルに対して適用せよ．
+"""
+
+
 import pickle
 import sys
 sys.path.insert(0, '../chapter9')
@@ -25,6 +35,6 @@ for line in open('data/family.txt'):
     words = line.strip().split()
     if not words[0] in word2id or not words[1] in word2id or not words[2] in word2id:
         break
-    q = Xpca[word2id[words[1]]] - Xpca[word2id[word[0]]] + Xpca[word2id[words[2]]]
-    f.write(lines.strip() + ' ' + similar_words(q, Xpca. word2id)[0][0] + '\n')
+    q = Xpca[word2id[words[1]]] - Xpca[word2id[words[0]]] + Xpca[word2id[words[2]]]
+    f.write(line.strip() + ' ' + similar_words(q, Xpca. word2id)[0][0] + '\n')
 f.close()
