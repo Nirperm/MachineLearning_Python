@@ -7,7 +7,7 @@ def cossim(x, y):
     return numpy.sum(x * y) / (numpy.sqrt(numpy.sum(x * x)) * numpy.sqrt(numpy.sum(y * y)))
 
 
-def similer_words(query_v, Xpca, word2id, n=10):
+def similar_words(query_v, Xpca, word2id, n=10):
     id2word = {v: k for k, v in word2id.items()}
     similers = list()
     for i, v in enumerate(Xpca):
@@ -32,5 +32,5 @@ if __name__ == '__main__':
     athens = Xpca[word2id['Athens']]
     query = spain - madrid + athens
     print('query: Spain - Madrid + Athens')
-    for w, v, s in similer_words(query, Xpca, word2id):
+    for w, v, s in similar_words(query, Xpca, word2id):
         print(w, s)

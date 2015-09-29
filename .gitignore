@@ -31,6 +31,10 @@ NLP_100knock/chapter9/data/X.pkl
 NLP_100knock/chapter9/data/Xpca.pkl
 NLP_100knock/chapter9/data/word2id.pkl
 NLP_100knock/chapter10/data/questions-words.txt
+NLP_100knock/chapter10/data/Xpca.txt
+NLP_100knock/chapter10/data/w2v.txt
+NLP_100knock/chapter10/data/word_similarity-353.txt
+NLP_100knock/chapter10/data/wordsim353/
 
 # Distribution / packaging
 .Python

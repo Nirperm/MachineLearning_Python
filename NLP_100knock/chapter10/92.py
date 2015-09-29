@@ -1,63 +1,30 @@
-import numpy
+import pickle
+import sys
+sys.path.insert(0, '../chapter9')
+
+from section_88 import similar_words
 from gensim.models import word2vec
 
 
+# FIXME: data/Xpca.txt is None,  something bugy
 
+Xpca = pickle.load(open('../chapter9/data/Xpca.pkl', 'rb'))
+word2id = pickle.load(open('../chapter9/data/word2id.pkl', 'rb'))
+w2v_model = word2vec.Word2Vec.load_word2vec_format('data/fb_post.bin', binary=True)
 
-def get_vec(word):
-    return word2_vec[word]
+f = open('data/w2v.txt', 'w')
+for line in open('data/family.txt'):
+    words = line.strip().split()
+    if not w2v_model.__contains__(words[0]) or not w2v_model.__contains__(words[1]) or not w2v_model.__contains__(words[2]):
+        continue
+    f.write(line.strip() + ' ' + w2v_model.most_similar([words[1], words[2], words[0]], topn=1)[0][0] + '\n')
+f.close()
 
-"""
-def vec_cos(x, y):
-    return numpy.dot(x, y) / (numpy.linalg.norm(x) * numpy.linalg.norm(y))
-
-
-
-
-def max_similar(a, b, c):
-    vector = get_vec(b) - get_vec(a) + get_vec(c)
-    gyo, retu = matrix_data.shape
-    cos_list = list()
-    for num in range(gyo):
-        cos_list.append(vec_cos(vector, matrix_data[num]))
-    descend_list = sorted(cos_list, reverse=True)
-    for score in descend_list[0:1]:
-        print(voc[cos_list.index(score)], score)
-
-
-def max_similar_alpha(a, b, c, d):
-    vector = (get_vec(b) - get_vec(a)) * 2 + get_vec(c)
-    print(vector)
-    gyo, retu = matrix_data.shape
-    cos_list = list()
-    for num in range(gyo):
-        cos_list.append(vec_cos(vector, matrix_data[num]))
-    descend_list = sorted(cos_list, reverse=True)
-    for score in descend_list[0:1]:
-        print(voc[cos_list.index(score)], score)
-    print(vec_cos(vector, get_vec(d)))
-"""
-
-def culc_vec(fname):
-    for line in open(fname):
-        if not line.startswith(': family'):
-            a, b, c, d = line.split(' ')
-            print(line.strip(),)
-            print(word2_vec[a])
-            """
-            try:
-                max_similar_alpha(a, b, c, d.strip())
-            except KeyboardInterrupt:
-                print('key interrupt')
-                exit()
-            except:
-                print('None', 0)
-            """
-
-
-if __name__ == '__main__':
-    # matrix_data = numpy.genfromtxt('vector.csv', delimiter = ',')
-    # matrix_data[numpy.isnan(matrix_data)] = 0
-
-    word2_vec = word2vec.Word2Vec.load_word2vec_format('data/fb_post.bin', binary=True)
-    culc_vec("data/family.txt")
+f = open('data/Xpca.txt', 'w')
+for line in open('data/family.txt'):
+    words = line.strip().split()
+    if not words[0] in word2id or not words[1] in word2id or not words[2] in word2id:
+        break
+    q = Xpca[word2id[words[1]]] - Xpca[word2id[word[0]]] + Xpca[word2id[words[2]]]
+    f.write(lines.strip() + ' ' + similar_words(q, Xpca. word2id)[0][0] + '\n')
+f.close()
