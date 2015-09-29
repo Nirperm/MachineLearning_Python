@@ -1,3 +1,8 @@
+"""
+88. 類似度の高い単語10件
+85で得た単語の意味ベクトルを読み込み，
+"England"とコサイン類似度が高い10語と，その類似度を出力せよ．
+"""
 
 import pickle
 import numpy
@@ -5,6 +10,7 @@ import numpy
 
 def cossim(x, y):
     return numpy.sum(x * y) / (numpy.sqrt(numpy.sum(x * x)) * numpy.sqrt(numpy.sum(y * y)))
+
 
 def similer_words(query, Xpca, word2id, n=10):
     query_id = word2id[query]
